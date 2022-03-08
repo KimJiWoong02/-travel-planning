@@ -45,28 +45,33 @@ $(document).ready(function () {
         }
 
 function posting() {
-    let title = $('#card-title').val()
-    let area = $('#card-area').val()
-    let location = $('#card-location').val()
-    let dateStart = $('#card-date-start').val()
-    let dateEnd = $('#card-date-end').val()
-    let share = $('#card-share').val()
-    $.ajax({
-        type: "POST",
-        url: "/plan",
-        data: {
-             title_give: title,
-             area_give: area,
-             location_give: location,
-             dateStart_give: dateStart,
-             dateEnd_give: dateEnd,
-             share_give: share,
-        },
-        success: function (response) {
-            alert(response['msg'])
-            window.location.reload()
-        }
-    })
+    // 상세폼이 빈칸일시 alert & 박스 안없어지게 하기 notes는 제외
+    if ($('.form-control').val() == '') {
+    alert("내용을 입력하세요.");
+    } else {
+        let title = $('#card-title').val()
+        let area = $('#card-area').val()
+        let location = $('#card-location').val()
+        let dateStart = $('#card-date-start').val()
+        let dateEnd = $('#card-date-end').val()
+        let share = $('#card-share').val()
+        $.ajax({
+            type: "POST",
+            url: "/plan",
+            data: {
+                 title_give: title,
+                 area_give: area,
+                 location_give: location,
+                 dateStart_give: dateStart,
+                 dateEnd_give: dateEnd,
+                 share_give: share,
+            },
+            success: function (response) {
+                alert(response['msg'])
+                window.location.reload()
+            }
+        })
+   }
 }
 
 
@@ -98,6 +103,7 @@ cardForm.addEventListener("submit", addCardForm);
 
 function addCardForm(e) {
     e.preventDefault();
+
 }
 
 // 카드폼 열기

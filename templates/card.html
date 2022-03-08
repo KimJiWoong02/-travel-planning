@@ -36,7 +36,7 @@
                         <label>상세지역</label>
                         <input
                                 type="text"
-                                class="form-control form-location"
+                                class="form-control form-location "
                                 id="card-location"
                                 name="name"
                                 required
@@ -52,8 +52,9 @@
                             시작일
                             <input
                                     type="date"
-                                    class="form-control-date"
+                                    class="form-control-date form-control"
                                     name="arrival"
+                                    required
                                     value="Today"
                                     id="card-date-start"
                             />
@@ -63,9 +64,10 @@
                             종료일
                             <input
                                     type="date"
-                                    class="form-control-date"
+                                    class="form-control-date form-control"
                                     name="departure"
                                     data-value="7"
+                                    required
                                     value="After one week"
                                     id="card-date-end"
                             />
@@ -134,7 +136,7 @@
                         <div class="form-group">
                             <label>추가정보</label>
                             <textarea
-                                    class="form-detail-control"
+                                    class="form-detail-control "
                                     id="form-detail-notes"
                                     rows="5"
                                     name="추가정보"
