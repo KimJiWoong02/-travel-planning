@@ -62,17 +62,28 @@ body {
   -webkit-user-select: none;
   touch-action: manipulation;
 }
+
 .btn:focus {
   box-shadow: inset 0px 0.8px 0px -0.25px rgba(255, 255, 255, 0.2), 0px 0.5px 1.5px rgba(54, 122, 246, 0.25), 0px 0px 0px 3.5px rgba(58, 108, 217, 0.5);
   outline: 0;
 }
 
-#btn-make-plan{
-  display: flex;
-  justify-content: center;
-  margin: auto;
-  margin-bottom: 10%;
+/* modal */
+.modal-wrap{
+  margin-top: 0;
+  position: fixed;
+  top: 0;
+  background-color: var(--color-login-bg);
+  z-index: 20;
+  width: 100%;
+  height: 100%;
 
+}
+
+.modal-bg {
+   margin: auto;
+  margin-top: 3%;
+  height: 100%;
 }
 
 /* form */
@@ -132,6 +143,9 @@ body {
   text-align: right;
 }
 
+
+
+
 /* card wrap*/
 .card-wrap {
   background-color: #f1f1f1;
@@ -167,28 +181,43 @@ body {
 .card-list-wrap {
   width: 1480px;
   margin: auto  ;
+
+
 }
 .card-columns {
    display: flex;
+   flex-wrap: wrap;
   width: 100%;
   justify-content: center;
 
 }
 
 .card {
+  /*flex: 1 0 21%;*/
+  flex: 0 0 auto;
+  width: 25%;
+  margin-bottom: 2%;
   cursor: pointer;
   border: 1px solid;
   border-color: var(--color-light-grey);
   margin-right: 3%;
+  height: 150px;
 }
 
 .card-body {
   padding: var(--spacing);
 }
 
-.card-body h5 {
+.card-title {
+  width: 400px;
   font-size: var(--font-large);
   padding-bottom: var(--spacing);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+
 }
 
 .card-body p {
@@ -200,10 +229,21 @@ body {
   width: 100%;
 }
 
+.card-like {
+  padding-left: 12px;
+  padding-bottom: 12px;
+}
+
 @media screen and (max-width: 768px) {
   .card-columns {
     display: block;
     width: 100%;
   }
+
+  .card {
+    flex: 0 0 auto;
+    width: 100%;
+  }
 }
+
 

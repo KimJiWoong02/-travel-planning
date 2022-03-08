@@ -6,21 +6,18 @@ from bs4 import BeautifulSoup
 
 
 # from pymongo import MongoClient
-# client = MongoClient('localhost', 27017)
-# db = client.dbsparta
+from pymongo import MongoClient
+import certifi
+ca = certifi.where()
+client = MongoClient('mongodb+srv://test:sparta@cluster0.ugilq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',tlsCAFile=ca)
+db = client.travel
 
 
 # jinja test
 
 
 
-@app.route('/result', methods=['POST', 'GET'])
-def detailCardResult():
-    if request.method == 'POST':
-        result = request.form
-        return render_template("card_detail_result.html", result=detailCardResult)
 
-#
 
 ## HTML을 주는 부분
 @app.route('/')
@@ -34,41 +31,39 @@ def plans():
 
 
 
-@app.route('/plans', methods=['POST'])
-def save_plans():
-    sample_receive = request.form['sample_give']
-    print(sample_receive)
-    return jsonify({'msg': 'POST 요청 완료!'})
-
-
-@app.route('/plans', methods=['POST'])
-def saving():
-
-
-    url_receive = request.form['url_give']
-    comment_receive = request.form['comment_give']
-
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
-    data = requests.get(url_receive, headers=headers)
-
-    soup = BeautifulSoup(data.text, 'html.parser')
-
-    title = soup.select_one('meta[property="og:title"]')['content']
-    image = soup.select_one('meta[property="og:image"]')['content']
-    desc = soup.select_one('meta[property="og:description"]')['content']
+@app.route("/plan", methods=["POST"])
+def plan_post():
+    title_receive = request.form['title_give']
+    area_receive = request.form['area_give']
+    location_receive = request.form['location_give']
+    dateStart_receive = request.form['dateStart_give']
+    dateEnd_receive = request.form['dateStart_give']
+    share_receive = request.form['share_give']
 
     doc = {
-        'title':title,
-        'image':image,
-        'desc':desc,
-        'url':url_receive,
-        'comment':comment_receive
+        'title':title_receive,
+        'area':area_receive,
+        'location':location_receive,
+        'dateStart':dateStart_receive,
+        'dateEnd':dateEnd_receive,
+        'share':share_receive,
     }
+    db.plans.insert_one(doc)
 
-    db.articles.insert_one(doc)
+    return jsonify({'msg':'저장 완료!'})
 
-    return jsonify({'msg':'저장이 완료되었습니다!'})
+# Plns 가져오기
+@app.route('/plan', methods=['GET'])
+def plan_get():
+    # try :
+    #     plans = list(db.plans.find({}).sort("date", -1).limit(20))
+    #     for plan in plans:
+    #         plan["_id"] = str(plan["_id"])
+
+        plan_list = list(db.plans.find({}, {'_id': False}))
+        return jsonify({'plans': plan_list})
+
+#
 
 if __name__ == '__main__':
    app.run('0.0.0.0',port=5000,debug=True)

@@ -1,217 +1,209 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8"/>
-    <meta
-            name="viewport"
-            content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
-    />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-
-
-    <!-- JS -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-            crossorigin="anonymous"></script>
-
-    <title>여행계획 - D반 6조 /card</title>
-    <!-- style -->
-    <link rel="stylesheet" href="../static/card.css"/>
-    <script src="../static/card.js" defer></script>
-</head>
-<body>
-
-<button onclick="openForm()" id="btn-make-plan" class="btn">계획세우기!</button>
-<form id='card-form' class="card-wrap hide" method="POST">
-    <div class="card-bg"></div>
-    <div class="card-container">
-        <div class="title">
-            <h4>여행주제</h4>
-            <input
-                    type="text"
-                    class="form-control"
-                    id="title"
-                    name="title"
-                    required
-            />
-        </div>
-
-        <div class="card-form">
-            <div class="location">
-                <label>지역</label>
-                <select id="form-area">
-                       <option value="">전체</option>
-                        <option value="서울특별시">서울특별시</option>
-                        <option value="경기도">경기도</option>
-                        <option value="강원도">강원도</option>
-                        <option value="충청남도">충청남도</option>
-                        <option value="충청북도">충청북도</option>
-                        <option value="전라남도">전라남도</option>
-                        <option value="전라북도">전라남도</option>
-                        <option value="경상남도">경상남도</option>
-                        <option value="경상북도">경상남도</option>
-                        <option value="제주도">제주도</option>
-                </select>
-                <label>상세지역</label>
-                <input
-                        type="text"
-                        class="form-control form-location"
-                        id="name"
-                        name="name"
-                        required
-                        minlength="4"
-                        maxlength="8"
-                        size="10"
-                />
-            </div>
-
-            <div class="datepicker">
-                <label>여행기간</label> <br/>
-                <label>
-                    시작일
-                    <input
-                            type="date"
-                            class="form-control-date"
-                            name="arrival"
-                            value="Today"
-                    />
-                </label>
-
-                <label>
-                    종료일
-                    <input
-                            type="date"
-                            class="form-control-date"
-                            name="departure"
-                            data-value="7"
-                            value="After one week"
-                    />
-                </label>
-            </div>
-
-            <div class="share-ppl">
-                <label>동행인 추가</label>
-                <input
-                        type="text"
-                        class="form-control"
-                        id=""
-                        name=""
-                        required
-                        minlength="4"
-                        maxlength="8"
-                        size="10"
-                />
-            </div>
-        </div>
-        <div class="detail-title">
-            세부일정
-            <button onclick="openDetailForm()" type="button">➕</button>
-        </div>
-
-
-        <!-- card-contents 여행 세부일정 짜기 -->
-
-        <div id='detail-form' class="detail-form  hide">
-            <div id='detail-form-cont' class="detail container ">
-                <div class="form-group">
-                    <label>여행일차</label>
-                    <input
-                            type="number"
-                            class="form-detail-control"
-                            id="form-detail-date"
-                            name="일차"
-                            required
-                    />
-                </div>
-                <div class="form-group">
-                    <label>장소</label>
+{% extends 'index.html' %}
+{% block content %}
+<div class="modal-wrap hide" id="modal-wrap">
+    <div class="modal-bg">
+        <form id='card-form' class="card-wrap " method="POST">
+            <div class="card-bg"></div>
+            <div class="card-container">
+                <div class="title">
+                    <h4>여행주제</h4>
                     <input
                             type="text"
-                            class="form-detail-control"
-                            id="form-detail-location"
-                            name="장소"
-                            placeholder="장소를 입력하세요"
+                            class="form-control"
+                            id="card-title"
+                            name="title"
                             required
                     />
                 </div>
 
-                <div class="form-group">
-                    <label>주소</label>
-                    <input
-                            type="text"
-                            class="form-detail-control"
-                            id="form-detail-address"
-                            name="주소"
-                            placeholder="주소를 입력하세요"
-                            required
-                    />
+                <div class="card-form">
+                    <div class="location">
+                        <label>지역</label>
+                        <select id="card-area">
+                            <option selected>-- 여행지역 --</option>
+                            <option value="">전체</option>
+                            <option value="서울특별시">서울특별시</option>
+                            <option value="경기도">경기도</option>
+                            <option value="강원도">강원도</option>
+                            <option value="충청남도">충청남도</option>
+                            <option value="충청북도">충청북도</option>
+                            <option value="전라남도">전라남도</option>
+                            <option value="전라북도">전라북도</option>
+                            <option value="경상남도">경상남도</option>
+                            <option value="경상북도">경상북도</option>
+                            <option value="제주도">제주도</option>
+                        </select>
+                        <label>상세지역</label>
+                        <input
+                                type="text"
+                                class="form-control form-location"
+                                id="card-location"
+                                name="name"
+                                required
+                                minlength="4"
+                                maxlength="8"
+                                size="10"
+                        />
+                    </div>
+
+                    <div class="datepicker">
+                        <label>여행기간</label> <br/>
+                        <label>
+                            시작일
+                            <input
+                                    type="date"
+                                    class="form-control-date"
+                                    name="arrival"
+                                    value="Today"
+                                    id="card-date-start"
+                            />
+                        </label>
+
+                        <label>
+                            종료일
+                            <input
+                                    type="date"
+                                    class="form-control-date"
+                                    name="departure"
+                                    data-value="7"
+                                    value="After one week"
+                                    id="card-date-end"
+                            />
+                        </label>
+                    </div>
+
+                    <div class="share-ppl">
+                        <label>동행인 추가</label>
+                        <input
+                                type="text"
+                                class="form-control"
+                                id="card-share"
+                                name=""
+                                required
+                                minlength="4"
+                                maxlength="8"
+                                size="10"
+
+                        />
+                    </div>
+                </div>
+                <div class="detail-title">
+                    세부일정
+                    <button onclick="openDetailForm()" type="button">➕</button>
                 </div>
 
-                <div class="form-group">
-                    <label>추가정보</label>
-                    <textarea
-                            class="form-detail-control"
-                            id="form-detail-notes"
-                            rows="5"
-                            name="추가정보"
-                            placeholder="장소에 대한 정보가 있나요?"
-                    ></textarea>
+
+                <!-- card-contents 여행 세부일정 짜기 -->
+
+                <div id='detail-form' class="detail-form hide">
+                    <div id='detail-form-cont' class="detail container ">
+                        <div class="form-group">
+                            <label>여행일차</label>
+                            <input
+                                    type="number"
+                                    class="form-detail-control"
+                                    id="form-detail-date"
+                                    name="일차"
+                                    required
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label>장소</label>
+                            <input
+                                    type="text"
+                                    class="form-detail-control"
+                                    id="form-detail-location"
+                                    name="장소"
+                                    placeholder="장소를 입력하세요"
+                                    required
+                            />
+                        </div>
+
+                        <div class="form-group">
+                            <label>주소</label>
+                            <input
+                                    type="text"
+                                    class="form-detail-control"
+                                    id="form-detail-address"
+                                    name="주소"
+                                    placeholder="주소를 입력하세요"
+                                    required
+                            />
+                        </div>
+
+                        <div class="form-group">
+                            <label>추가정보</label>
+                            <textarea
+                                    class="form-detail-control"
+                                    id="form-detail-notes"
+                                    rows="5"
+                                    name="추가정보"
+                                    placeholder="장소에 대한 정보가 있나요?"
+                            ></textarea>
+                        </div>
+
+
+                        <button type="button" class="btn" id="btn-detail-add">
+                            일정등록
+                        </button>
+
+                        <button onclick="hideDetailForm()" type="button" class="btn" id="btn-detail-cancle">
+                            취소
+                        </button>
+                    </div>
                 </div>
 
+                <!-- detail table 세부일정 테이블 -->
 
-                <button  type="button" class="btn" id="btn-detail-add">
-                    일정등록
-                </button>
+                <table class="detail-table" id="detail-table-contents">
+                    <thead>
+                    <tr>ㅍ
+                        <th class="tg">
+                            <span>일차</span></th>
+                        <th class="tg">
+                            <span>장소</span>
+                        </th>
+                        <th class="tg">
+                            <span>주소</span>
+                        </th>
+                        <th class="tg">
+                            <span>메모</span>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody id="detail-contents" class="detail-contents">
+                    </tbody>
+                    <!-- detail form template 세부일정 템플릿 -->
+                </table>
 
-                <button onclick="hideDetailForm()" type="button" class="btn" id="btn-detail-cancle">
+                <!-- btn-group -->
+
+                <input onclick="posting()" class="btn" type="submit" value="계획등록"/>
+                <button
+                        onclick="closeForm()"
+                        type="button"
+                        class="btn btn-secondary btn-lg"
+                >
                     취소
                 </button>
             </div>
-        </div>
-
-        <!-- detail table 세부일정 테이블 -->
-
-        <table class="detail-table" id="detail-table-contents">
-            <thead>
-            <tr>
-                <th class="tg">
-                    <span>일차</span></th>
-                <th class="tg">
-                    <span>장소</span>
-                </th>
-                <th class="tg">
-                    <span>주소</span>
-                </th>
-                <th class="tg">
-                    <span>메모</span>
-                </th>
-            </tr>
-            </thead>
-            <!-- detail form template 세부일정 템플릿 -->
-        </table>
-
-        <!-- btn-group -->
-
-        <input onclick="posting()" class="btn" type="submit" value="계획등록"/>
-        <button
-                onclick="closeForm()"
-                type="button"
-                class="btn btn-secondary btn-lg"
-        >
-            취소
-        </button>
+        </form>
     </div>
-    </div>
-</form>
+</div>
 
 
 <!-- 카드 템플릿  -->
 <hr>
-<div class="blank"><h2 >{{ name }}밑부터 후작업. 카드 등록후 카드 정렬, 카드 클릭시 지정한 템플릿으로 보여주기, !</h2></div>
 
 
+<!--posted card-->
 
+<div class="card-list-wrap">
+    <div class="card-columns"  id="cards-posted">
+    </div>
+</div>
+
+<div class="blank"><h2>{{ name }}밑부터 후작업. 카드 등록후 카드 정렬, 카드 클릭시 지정한 템플릿으로 보여주기, !</h2></div>
 
 
 <div class="card-wrap">
@@ -302,46 +294,7 @@
     </div>
 </div>
 
-<div class="card-list-wrap">
-    <div class="card-columns">
-        <div class="card">
-            <!--        <img class="card-img-top" src="..." alt="Card image cap">-->
-            <div class="card-body">
-                <h5 class="card-title">가족과 가는 속초여행</h5>
-                <p class="card-text">강원도 / 속초</p>
-            </div>
-        </div>
-        <div class="card">
-            <!--        <img class="card-img-top" src="..." alt="Card image cap">-->
-            <div class="card-body">
-                <h5 class="card-title">가족과 가는 속초여행</h5>
-                <p class="card-text">강원도 / 속초</p>
-            </div>
-        </div>
-        <div class="card">
-            <!--        <img class="card-img-top" src="..." alt="Card image cap">-->
-            <div class="card-body">
-                <h5 class="card-title">가족과 가는 속초여행</h5>
-                <p class="card-text">강원도 / 속초</p>
-            </div>
-        </div>
-        <div class="card">
-            <!--        <img class="card-img-top" src="..." alt="Card image cap">-->
-            <div class="card-body">
-                <h5 class="card-title">가족과 가는 속초여행</h5>
-                <p class="card-text">강원도 / 속초</p>
-            </div>
-        </div>
-        <div class="card">
-            <!--        <img class="card-img-top" src="..." alt="Card image cap">-->
-            <div class="card-body">
-                <h5 class="card-title">가족과 가는 속초여행</h5>
-                <p class="card-text">강원도 / 속초</p>
-            </div>
-        </div>
-    </div>
-</div>
 
 
-</body>
-</html>
+{% endblock %}
+
