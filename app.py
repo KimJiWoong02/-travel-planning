@@ -14,15 +14,17 @@ app = Flask(__name__)
 client = MongoClient('mongodb+srv://test:sparta@cluster0.ugilq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', tlsCAFile=certifi.where())
 db = client.travel
 
-# jwt 토큰을 만들 때 필요한 key
-SECRET_KEY = 'SPARTA'
 
+#################################
+##           메인페이지           ##
+#################################
 
+# 메인페이지 Route
 @app.route('/')
 def home():
     return render_template('index.html')
 
-
+# 메인페이지 API
 @app.route('/api/plans', methods=['GET'])
 def get_plans():
     location = request.args.get('location', "")
@@ -57,20 +59,24 @@ def get_plans():
     return jsonify({'plans': results, 'last_page': last_page, 'page': page, 'none': none})
 
 
+#################################
+##        로그인 회원가입         ##
+#################################
+
+# 로그인 Route
 @app.route('/login')
 def login():
     msg = request.args.get("msg")
     return render_template('login.html', msg=msg)
 
-
+# 회원가입 Route
 @app.route('/register')
 def register():
     return render_template('register.html')
 
 
-#################################
-##  로그인 회원가입을 위한 API     ##
-#################################
+# jwt 토큰을 만들 때 필요한 key
+SECRET_KEY = 'SPARTA'
 
 # [회원가입 API]
 # id, pw, nickname을 받아서, mongoDB에 저장.
