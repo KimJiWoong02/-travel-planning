@@ -5,28 +5,15 @@ import requests
 from bs4 import BeautifulSoup
 
 
+
 # from pymongo import MongoClient
 # client = MongoClient('localhost', 27017)
 # db = client.dbsparta
 
-
-# jinja test
-
-
-
-@app.route('/result', methods=['POST', 'GET'])
-def detailCardResult():
-    if request.method == 'POST':
-        result = request.form
-        return render_template("card_detail_result.html", result=detailCardResult)
-
-#
-
 ## HTML을 주는 부분
 @app.route('/')
-def plans():
-    myname = "Sparta"
-    return render_template('card.html', name=myname)
+def home():
+   return render_template('card.html')
 
 
 
