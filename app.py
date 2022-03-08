@@ -9,6 +9,9 @@ import datetime
 # 회원가입 시 비밀번호를 암호화하여 DB에 저장
 import hashlib
 
+# jwt 토큰을 만들 때 필요한 key
+SECRET_KEY = 'SPARTA'
+
 app = Flask(__name__)
 
 client = MongoClient('mongodb+srv://test:sparta@cluster0.ugilq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', tlsCAFile=certifi.where())
@@ -22,7 +25,14 @@ db = client.travel
 # 메인페이지 Route
 @app.route('/')
 def home():
-    return render_template('index.html')
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({"username": payload["id"]})
+        return render_template('index.html', user=user_info)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return render_template('index.html', user=None)
+
 
 # 메인페이지 API
 @app.route('/api/plans', methods=['GET'])
@@ -69,14 +79,12 @@ def login():
     msg = request.args.get("msg")
     return render_template('login.html', msg=msg)
 
+
 # 회원가입 Route
 @app.route('/register')
 def register():
     return render_template('register.html')
 
-
-# jwt 토큰을 만들 때 필요한 key
-SECRET_KEY = 'SPARTA'
 
 # [회원가입 API]
 # id, pw, nickname을 받아서, mongoDB에 저장.
@@ -141,7 +149,7 @@ def save_plans():
 
 
 # 프로필 블루프린트 등록 (연결)
-app.register_blueprint(user.bp)
+# app.register_blueprint(user.bp)
 
 
 ## local port

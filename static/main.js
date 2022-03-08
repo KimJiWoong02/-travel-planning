@@ -5,9 +5,6 @@ $(document).ready(() => {
 
     loadPlans(query)
 
-    console.log(Object.fromEntries(new URLSearchParams(query)))
-    console.log(new URLSearchParams(query))
-
     function getQueryStringValue(key) {
         return decodeURIComponent(query.replace(new RegExp("^(?:.*[&\\?]" + encodeURIComponent(key).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));
     }
@@ -88,11 +85,11 @@ function onSuccess(response) {
 }
 
 function createPlanCard(plan) {
-    const {imageUrl, title, hashTags} = plan
+    const {imageUrl, title, hashTags, _id} = plan
     let hashTagsHtml = ''
     hashTags.forEach(tag => hashTagsHtml += `<span class="pe-2">#${tag}</span>`)
 
-    return `<div class="col">
+    return `<div class="col" id=${_id}>
                 <div class="card">
                     <img src="${imageUrl}"class="card-img-top">
                     <div class="card-body">
