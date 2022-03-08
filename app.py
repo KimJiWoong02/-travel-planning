@@ -104,6 +104,10 @@ def api_check_dup():
     return jsonify({'result': 'success', 'msg': '멋진 아이디에요!'})
 
 
+#################################
+##  PLANS  ##
+#################################
+
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
 
