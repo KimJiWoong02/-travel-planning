@@ -21,7 +21,7 @@ def user(username):
         status = (username == payload["id"])
 
         user_info = db.testuser.find_one({"username": username}, {"_id": False})
-        return render_template('user/user.html', user_info=user_info, status=status)
+        return render_template('user.html', user_info=user_info, status=status)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
