@@ -1,9 +1,15 @@
 from flask import Flask, render_template, jsonify, request, session, redirect, url_for
-
-app = Flask(__name__)
-
 from pymongo import MongoClient
 import certifi
+import math
+# jwt 패키지 사용
+import jwt
+# 토큰에 만료시간을 줘야하기 때문에, datetime 모듈도 사용합니다.
+import datetime
+# 회원가입 시 비밀번호를 암호화하여 DB에 저장
+import hashlib
+
+app = Flask(__name__)
 
 client = MongoClient('mongodb+srv://test:sparta@cluster0.ugilq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', tlsCAFile=certifi.where())
 db = client.travel
@@ -11,20 +17,11 @@ db = client.travel
 # jwt 토큰을 만들 때 필요한 key
 SECRET_KEY = 'SPARTA'
 
-# jwt 패키지 사용
-import jwt
-
-# 토큰에 만료시간을 줘야하기 때문에, datetime 모듈도 사용합니다.
-import datetime
-
-# 회원가입 시 비밀번호를 암호화하여 DB에 저장
-import hashlib
-
-import math
 
 @app.route('/')
 def home():
     return render_template('index.html')
+
 
 @app.route('/api/plans', methods=['GET'])
 def get_plans():
@@ -59,9 +56,6 @@ def get_plans():
 
     return jsonify({'plans': results, 'last_page': last_page, 'page': page, 'none': none})
 
-
-if __name__ == '__main__':
-    app.run('0.0.0.0', port=5000, debug=True)
 
 @app.route('/login')
 def login():
@@ -108,6 +102,11 @@ def api_check_dup():
         return jsonify({'result': 'fail', 'msg': '이미 사용중인 아이디입니다.'})
 
     return jsonify({'result': 'success', 'msg': '멋진 아이디에요!'})
+
+
+if __name__ == '__main__':
+    app.run('0.0.0.0', port=5000, debug=True)
+
 
 
 
