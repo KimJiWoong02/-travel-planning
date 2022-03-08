@@ -104,6 +104,38 @@ def api_check_dup():
     return jsonify({'result': 'success', 'msg': '멋진 아이디에요!'})
 
 
+#################################
+##  PLANS  ##
+#################################
+
+# jinja test
+
+@app.route('/result', methods=['POST', 'GET'])
+def detailCardResult():
+    if request.method == 'POST':
+        result = request.form
+        return render_template("card_detail_result.html", result=detailCardResult)
+
+
+## HTML을 주는 부분
+@app.route('/')
+def plans():
+    myname = "Sparta"
+    return render_template('card.html', name=myname)
+
+
+
+## API 역할을 하는 부분
+
+@app.route('/plans', methods=['POST'])
+def save_plans():
+    sample_receive = request.form['sample_give']
+    print(sample_receive)
+    return jsonify({'msg': 'POST 요청 완료!'})
+
+
+## local port
+
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
 
