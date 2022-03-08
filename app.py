@@ -140,6 +140,10 @@ def save_plans():
     return jsonify({'msg': 'POST 요청 완료!'})
 
 
+# 프로필 블루프린트 등록 (연결)
+app.register_blueprint(user.bp)
+
+
 ## local port
 
 if __name__ == '__main__':
