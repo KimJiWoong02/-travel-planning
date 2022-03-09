@@ -85,16 +85,17 @@ function onSuccess(response) {
 }
 
 function createPlanCard(plan) {
-    const {imageUrl, title, hashTags, _id} = plan
-    let hashTagsHtml = ''
-    hashTags.forEach(tag => hashTagsHtml += `<span class="pe-2">#${tag}</span>`)
+    const {image, title, host, _id, date_start, date_end} = plan
+    // let hashTagsHtml = ''
+    // hashTags.forEach(tag => hashTagsHtml += `<span class="pe-2">#${tag}</span>`)
 
     return `<div class="col" id=${_id}>
                 <div class="card">
-                    <img src="${imageUrl}"class="card-img-top">
+                    <img src="${image}"class="card-img-top">
                     <div class="card-body">
                         <h5 class="card-title text-dark">${title}</h5>
-                        <p class="card-text text-muted">${hashTagsHtml}</p>
+                        <p class="card-text text-muted">${date_start} ~ ${date_end}</p>
+                        <span class="card-text text-muted">Host - ${host}</span>
                     </div>
                 </div>
             </div>`
