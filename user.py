@@ -1,3 +1,5 @@
+import os
+
 import jwt
 from flask import Blueprint, render_template, redirect, url_for, request, jsonify
 from pymongo import MongoClient
@@ -44,7 +46,8 @@ def edit_profile():
             extension = filename.split('.')[-1]
             file_path = f'profile_pics/{id}.{extension}'
 
-            file.save('static/'+file_path)
+            file.save(os.path.join(bp.root_path, './static/', file_path))
+
             new_doc['img'] = filename
             new_doc['img_path'] = file_path
 
