@@ -1,3 +1,8 @@
+$(document).ready(function () {
+    listing()
+})
+
+
 
 // get 요청 API code
   function listing() {
@@ -39,31 +44,39 @@
             })
         }
 
-
-
 function posting() {
-    // 상세폼이 빈칸일시 alert & 박스 안없어지게 하기 notes는 제외
-    // if ($('.form-control').val() == '') {
+    // 빈칸일시 제출 못함
+    // if ($('.card-form').val() == '') {
     // alert("내용을 입력하세요.");
     // } else {
-        let image =  $('#card-image').val()
         let title = $('#card-title').val()
         let area = $('#card-area').val()
         let location = $('#card-location').val()
         let dateStart = $('#card-date-start').val()
         let dateEnd = $('#card-date-end').val()
         let share = $('#card-share').val()
+
+        for (let i = 0; i < detailTableArr.length; i++) {
+
+            let detailDate = detailTableArr[i][0];
+            let detailLocation = detailTableArr[i][1];
+            let detailAddress = detailTableArr[i][2];
+            let detailNotes = detailTableArr[i][3];
+        }
+        console.log("wpfef",detailTableArr);
+
+
         $.ajax({
             type: "POST",
             url: "/plan",
             data: {
-                 image_give : image,
                  title_give: title,
                  area_give: area,
                  location_give: location,
                  dateStart_give: dateStart,
                  dateEnd_give: dateEnd,
                  share_give: share,
+                 detailTable_give : [detailDate, detailLocation, detailAddress, detailNotes ]
             },
             success: function (response) {
                 alert(response['msg'])
@@ -72,6 +85,7 @@ function posting() {
         })
    // }
 }
+
 
 // 세부일정 폼 추가
 
@@ -161,7 +175,7 @@ function createDetailRow() {
                     <span>${detailAddress.value}</span>
                 </td>
                 <td class="tg-l1tf">${detailNotes.value}</td>
-                <td class="td-bin"><button onclick="removeDetailPlan()" id="btn-remove-detail">🗑</button></td>  
+<!--                <td class="td-bin"><button onclick="removeDetailPlan()" id="btn-remove-detail">🗑</button></td>  -->
     `
     id++;
     return tableRow;
@@ -184,6 +198,8 @@ function tableToArr() {
     })
     console.log(detailTableArr);
 }
+
+// 세부일정 삭제
 
 // card click 했을 때
 
