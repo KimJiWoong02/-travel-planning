@@ -113,9 +113,7 @@ def plan_post():
     location_receive = request.form['location_give']
     dateStart_receive = request.form['dateStart_give']
     dateEnd_receive = request.form['dateStart_give']
-    share_receive = request.form['share_give']
-
-    # detailTable_receive = request.form['detailTable_give']
+    detailTable_receive = request.form['tableData_give']
 
     doc = {
         'image':image_receive,
@@ -124,8 +122,7 @@ def plan_post():
         'location':location_receive,
         'dateStart':dateStart_receive,
         'dateEnd':dateEnd_receive,
-        'share':share_receive,
-        # 'detailTable': detailTable_receive,
+        'detailTable': detailTable_receive,
     }
     db.plans.insert_one(doc)
 
