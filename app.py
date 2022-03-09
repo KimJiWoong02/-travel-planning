@@ -99,29 +99,44 @@ app.register_blueprint(blue_login)
         ##  PLANS  ##
 #################################
 
-# jinja test
 
-@app.route('/result', methods=['POST', 'GET'])
-def detailCardResult():
-    if request.method == 'POST':
-        result = request.form
-        return render_template("card_detail_result.html", result=detailCardResult)
+@app.route("/plan", methods=["POST"])
+def plan_post():
+    image_receive = request.form['image_give']
+    title_receive = request.form['title_give']
+    area_receive = request.form['area_give']
+    location_receive = request.form['location_give']
+    dateStart_receive = request.form['dateStart_give']
+    dateEnd_receive = request.form['dateStart_give']
+    share_receive = request.form['share_give']
 
+    # detailTable_receive = request.form['detailTable_give']
 
-## HTML을 주는 부분
-@app.route('/')
-def plans():
-    myname = "Sparta"
-    return render_template('card.html', name=myname)
+    doc = {
+        'image':image_receive,
+        'title':title_receive,
+        'area':area_receive,
+        'location':location_receive,
+        'dateStart':dateStart_receive,
+        'dateEnd':dateEnd_receive,
+        'share':share_receive,
+        # 'detailTable': detailTable_receive,
+    }
+    db.plans.insert_one(doc)
 
+    return jsonify({'msg':'저장 완료!'})
 
-## API 역할을 하는 부분
+# Plns 가져오기
+@app.route('/plan', methods=['GET'])
+def plan_get():
+    # try :
+    #     plans = list(db.plans.find({}).sort("date", -1).limit(20))
+    #     for plan in plans:
+    #         plan["_id"] = str(plan["_id"])
 
-@app.route('/plans', methods=['POST'])
-def save_plans():
-    sample_receive = request.form['sample_give']
-    print(sample_receive)
-    return jsonify({'msg': 'POST 요청 완료!'})
+        plan_list = list(db.plans.find({}, {'_id': False}))
+        return jsonify({'plans': plan_list})
+
 
 
 # 프로필 블루프린트 등록 (연결)
