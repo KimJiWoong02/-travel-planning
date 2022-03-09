@@ -1,5 +1,4 @@
 import os.path
-
 import jwt
 from flask import Blueprint, render_template, redirect, url_for, request, jsonify
 from pymongo import MongoClient
@@ -14,8 +13,6 @@ client = MongoClient('mongodb+srv://test:sparta@cluster0.ugilq.mongodb.net/myFir
 db = client.travel
 
 bp = Blueprint('user', __name__, url_prefix='/user')
-
-print(dir(bp))
 
 
 @bp.route('/<id>')
@@ -54,6 +51,7 @@ def edit_profile():
             new_doc['img_path'] = file_path
 
         db.users.update_one({'id': payload['id']}, {'$set': new_doc})
+
         return jsonify({"result": "success", 'msg': '프로필을 업데이트했습니다.'})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
