@@ -24,7 +24,7 @@
 
 .mypost > button {
     width: 90%;
-    margin: 20px auto 20px auto;
+    margin: 10px auto 10px auto;
     display: block;
 }
 
@@ -37,8 +37,12 @@
     width: 90%;
 }
 
+.last-input {
+    margin-bottom: 40px;
+}
+
 .login_error_wrap{
-    margin: 30px auto 0px auto;
+    margin: 0px auto 20px auto;
     width: 90%;
     display: block;
     color: red;
