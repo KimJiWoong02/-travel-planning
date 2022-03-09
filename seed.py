@@ -2,10 +2,8 @@ import certifi
 from pymongo import MongoClient, InsertOne
 
 ca = certifi.where()
-client = MongoClient('mongodb+srv://test:sparta@cluster0.xedql.mongodb.net/Cluster0?retryWrites=true&w=majority',
-                     tlsCAFile=ca)
-db = client.plan
-
+client = MongoClient('mongodb+srv://test:sparta@cluster0.ugilq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', tlsCAFile=certifi.where())
+db = client.travel
 
 def get_dummy():
     return {
@@ -16,6 +14,6 @@ def get_dummy():
     }
 
 
-db.plan.bulk_write([InsertOne(get_dummy()) for i in range(200)])
+db.plan.bulk_write([InsertOne(get_dummy()) for i in range(100)])
 
 print("it works")

@@ -1,31 +1,27 @@
 from flask import Flask, render_template, jsonify, request, session, redirect, url_for, make_response
+from pymongo import MongoClient
+import certifi
+import math
+# jwt 패키지 사용
+import jwt
+# 토큰에 만료시간을 줘야하기 때문에, datetime 모듈도 사용합니다.
+import datetime
+# 회원가입 시 비밀번호를 암호화하여 DB에 저장
+import hashlib
+# decorator jwt 검사를 위한 미들웨어로 활용
+from functools import wraps
 
 app = Flask(__name__)
 # config 파일 참조
 app.config.from_pyfile('config.py')
 
-from pymongo import MongoClient
-import certifi
-
 client = MongoClient(app.config['MONGODB'], tlsCAFile=certifi.where())
 db = client.travel
 
-# jwt 패키지 사용
-import jwt
 
-# 토큰에 만료시간을 줘야하기 때문에, datetime 모듈도 사용합니다.
-import datetime
-
-# 회원가입 시 비밀번호를 암호화하여 DB에 저장
-import hashlib
-
-import math
-
-# decorator jwt 검사를 위한 미들웨어로 활용
-from functools import wraps
-
-
-
+#################################
+##        토큰 검사 미들웨어      ##
+#################################
 def home_decorator():
     def _home_decorator(f):
         @wraps(f)
@@ -112,12 +108,24 @@ def getRefreshToken():
         return False
 
 
+#################################
+##           메인페이지           ##
+#################################
+
+# 메인페이지 Route
 @app.route('/')
 @home_decorator()
 def home():
-    return render_template('index.html')
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, app.config['SECRET_KEY'], algorithms=['HS256'])
+        user_info = db.users.find_one({"username": payload["id"]})
+        return render_template('index.html', user=user_info)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return render_template('index.html', user=None)
 
 
+# 메인페이지 API
 @app.route('/api/plans', methods=['GET'])
 def get_plans():
     location = request.args.get('location', "")
@@ -152,20 +160,21 @@ def get_plans():
     return jsonify({'plans': results, 'last_page': last_page, 'page': page, 'none': none})
 
 
+#################################
+##        로그인 회원가입         ##
+#################################
+
+# 로그인 Route
 @app.route('/login')
 def login():
-    # msg = request.args.get("msg")
-    return render_template('login.html')  # msg=msg)
+    return render_template('login.html')
 
 
+# 회원가입 Route
 @app.route('/register')
 def register():
     return render_template('register.html')
 
-
-#################################
-##  로그인 회원가입을 위한 API     ##
-#################################
 
 # [회원가입 API]
 # name, id, pw을 받아서, mongoDB에 저장.
@@ -243,5 +252,40 @@ def api_login():
         return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
 
 
+#################################
+##  PLANS  ##
+#################################
+
+# jinja test
+
+@app.route('/result', methods=['POST', 'GET'])
+def detailCardResult():
+    if request.method == 'POST':
+        result = request.form
+        return render_template("card_detail_result.html", result=detailCardResult)
+
+
+## HTML을 주는 부분
+@app.route('/')
+def plans():
+    myname = "Sparta"
+    return render_template('card.html', name=myname)
+
+
+
+## API 역할을 하는 부분
+
+@app.route('/plans', methods=['POST'])
+def save_plans():
+    sample_receive = request.form['sample_give']
+    print(sample_receive)
+    return jsonify({'msg': 'POST 요청 완료!'})
+
+
+# 프로필 블루프린트 등록 (연결)
+# app.register_blueprint(user.bp)
+
+
+## local port
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
