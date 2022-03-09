@@ -3,6 +3,7 @@ function posting() {
     if ($('.form-control').val() == '') {
     alert("내용을 입력하세요.");
     } else {
+        let image =  $('#card-image').val()
         let title = $('#card-title').val()
         let area = $('#card-area').val()
         let location = $('#card-location').val()
@@ -13,6 +14,7 @@ function posting() {
             type: "POST",
             url: "/plan",
             data: {
+                image_give : image,
                  title_give: title,
                  area_give: area,
                  location_give: location,
