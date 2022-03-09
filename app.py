@@ -137,8 +137,6 @@ def plan_get():
         plan_list = list(db.plans.find({}, {'_id': False}))
         return jsonify({'plans': plan_list})
 
-#
-
 
 
 # 프로필 블루프린트 등록 (연결)
