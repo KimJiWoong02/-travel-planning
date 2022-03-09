@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<!-- saved from url=(0022)http://localhost:5000/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- CSS only -->
+    <link href="./여행계획_files/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <!-- Plan CSS-->
+    <link rel="stylesheet" href="./여행계획_files/card.css">
+    <link rel="stylesheet" href="./여행계획_files/bulma.min.css">
+<!-- Font Awesome CSS -->
+        <link href="./여행계획_files/font-awesome.min.css" rel="stylesheet">
+
+    <!--Index Scrpit-->
+    <script src="./여행계획_files/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script defer="" src="./여행계획_files/main.js"></script>
+    <!-- Plan JS-->
+    <script defer="" src="./여행계획_files/card.js"></script>
+    <script src="./여행계획_files/jquery.min.js"></script>
+    <script src="./여행계획_files/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+
+    <title>여행계획</title>
+</head>
+<body>
+    <div class="container mt-4">
+        <header class="d-flex justify-content-between align-items-center">
+            <h2 class="mb-0"><a class="text-decoration-none text-dark" href="http://localhost:5000/">스파르타 여행일지</a></h2>
+            <button class="btn fs-4">Login</button>
+        </header>
+        <div class="text-center">
+            <div class="w-100 d-flex justify-content-center">
+                <form class="form input-group my-4 w-50">
+                    <input type="text" class="query form-control rounded-pill" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" placeholder="지역을 입력하세요.">
+                </form>
+            </div>
+        </div>
+        <nav class="d-flex w-100 justify-content-between align-items-end">
+            <div class="d-flex gap-2">
+                <div class="d-flex flex-column">
+                    <label class="form-label fw-bold" for="location">전국 팔도</label>
+                    <select class="form-select" id="location" name="location">
+                        <option value="">전체</option>
+                        <option value="서울특별시">서울특별시</option>
+                        <option value="경기도">경기도</option>
+                        <option value="강원도">강원도</option>
+                        <option value="충청남도">충청남도</option>
+                        <option value="충청북도">충청북도</option>
+                        <option value="전라남도">전라남도</option>
+                        <option value="전라북도">전라남도</option>
+                        <option value="경상남도">경상남도</option>
+                        <option value="경상북도">경상남도</option>
+                        <option value="제주도">제주도</option>
+                    </select>
+                </div>
+                <div class="d-flex flex-column">
+                    <label class="form-label fw-bold" for="sort">정렬</label>
+                    <select class="form-select" id="sort" name="sort">
+                        <option value="">전체</option>
+                        <option value="좋아요">인기순</option>
+                        <option value="최신">최신순</option>
+                    </select>
+                </div>
+            </div>
+
+            <!--<a href="#" class="btn btn-primary fw-bold btn-make-plan">작성하기</a>-->
+            <!--버튼 대체-->
+            <button onclick="openForm()" id="btn-make-plan" class="btn btn-primary fw-bold">작성하기</button>
+        </nav>
+        <main class="py-4 px4">
+            <section id="planList" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            </section>
+            <div id="paginatorHolder">
+            </div>
+        </main>
+    </div>
+
+    <card role="card-section">
+    <!-- card modal form content block -->
+    
+<div class="modal-wrap" id="modal-wrap">
+    <div class="modal-bg">
+        <form id="card-form" class="card-wrap " method="POST">
+            <div class="card-bg"></div>
+            <div class="card-container">
+                <div class="title">
+                    <h4>여행주제</h4>
+                    <input type="text" class="form-control" id="card-title" name="title" required="">
+                </div>
+
+                <div class="card-form">
+                    <div class="location">
+                        <label>지역</label>
+                        <select id="card-area">
+                            <option selected="">-- 여행지역 --</option>
+                            <option value="">전체</option>
+                            <option value="서울특별시">서울특별시</option>
+                            <option value="경기도">경기도</option>
+                            <option value="강원도">강원도</option>
+                            <option value="충청남도">충청남도</option>
+                            <option value="충청북도">충청북도</option>
+                            <option value="전라남도">전라남도</option>
+                            <option value="전라북도">전라북도</option>
+                            <option value="경상남도">경상남도</option>
+                            <option value="경상북도">경상북도</option>
+                            <option value="제주도">제주도</option>
+                        </select>
+                        <label>상세지역</label>
+                        <input type="text" class="form-control form-location" id="card-location" name="name" required="" minlength="4" maxlength="8" size="10">
+                    </div>
+
+                    <div class="datepicker">
+                        <label>여행기간</label> <br>
+                        <label>
+                            시작일
+                            <input type="date" class="form-control-date" name="arrival" value="Today" id="card-date-start">
+                        </label>
+
+                        <label>
+                            종료일
+                            <input type="date" class="form-control-date" name="departure" data-value="7" value="After one week" id="card-date-end">
+                        </label>
+                    </div>
+
+                    <div class="share-ppl">
+                        <label>동행인 추가</label>
+                        <input type="text" class="form-control" id="card-share" name="" required="" minlength="4" maxlength="8" size="10">
+                    </div>
+                </div>
+                <div class="detail-title">
+                    세부일정
+                    <button onclick="openDetailForm()" type="button">➕</button>
+                </div>
+
+
+                <!-- card-contents 여행 세부일정 짜기 -->
+
+                <div id="detail-form" class="detail-form">
+                    <div id="detail-form-cont" class="detail container ">
+                        <div class="form-group">
+                            <label>여행일차</label>
+                            <input type="number" class="form-detail-control" id="form-detail-date" name="일차" required="">
+                        </div>
+                        <div class="form-group">
+                            <label>장소</label>
+                            <input type="text" class="form-detail-control" id="form-detail-location" name="장소" placeholder="장소를 입력하세요" required="">
+                        </div>
+
+                        <div class="form-group">
+                            <label>주소</label>
+                            <input type="text" class="form-detail-control" id="form-detail-address" name="주소" placeholder="주소를 입력하세요" required="">
+                        </div>
+
+                        <div class="form-group">
+                            <label>추가정보</label>
+                            <textarea class="form-detail-control" id="form-detail-notes" rows="5" name="추가정보" placeholder="장소에 대한 정보가 있나요?"></textarea>
+                        </div>
+
+
+                        <button type="button" class="btn" id="btn-detail-add">
+                            일정등록
+                        </button>
+
+                        <button onclick="hideDetailForm()" type="button" class="btn" id="btn-detail-cancle">
+                            취소
+                        </button>
+                    </div>
+                </div>
+
+                <!-- detail table 세부일정 테이블 -->
+
+                ㅍ
+                        <table class="detail-table" id="detail-table-contents">
+                    <thead>
+                    <tr><th class="tg">
+                            <span>일차</span></th>
+                        <th class="tg">
+                            <span>장소</span>
+                        </th>
+                        <th class="tg">
+                            <span>주소</span>
+                        </th>
+                        <th class="tg">
+                            <span>메모</span>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody id="detail-contents" class="detail-contents">
+                    </tbody>
+                    <!-- detail form template 세부일정 템플릿 -->
+                </table>
+
+                <!-- btn-group -->
+
+                <input onclick="posting()" class="btn" type="submit" value="계획등록">
+                <button onclick="closeForm()" type="button" class="btn btn-secondary btn-lg">
+                    취소
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<!-- 카드 템플릿  -->
+<hr>
+
+
+<!--posted card-->
+
+<div class="card-list-wrap">
+    <div class="card-columns" id="cards-posted">
+                        <div class="card"> 
+                            <div class="card-body">
+                                <h5 class="card-title">제주도여행</h5>
+                                <p class="card-text"> 제주도 / 11 </p>
+                            </div>
+                
+                            <div class="card-like">
+                                <a class="card-like-a" aria-label="heart" onclick="toggle_like(&#39;&#39;, &#39;heart&#39;)">
+                                    <span class="icon is-small"><i class="fa fa-heart" aria-hidden="true"></i></span>&nbsp;<span class="like-num">2.7k</span>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="card"> 
+                            <div class="card-body">
+                                <h5 class="card-title">몰라</h5>
+                                <p class="card-text"> 경기도 / 지역상세지역 </p>
+                            </div>
+                
+                            <div class="card-like">
+                                <a class="card-like-a" aria-label="heart" onclick="toggle_like(&#39;&#39;, &#39;heart&#39;)">
+                                    <span class="icon is-small"><i class="fa fa-heart" aria-hidden="true"></i></span>&nbsp;<span class="like-num">2.7k</span>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="card"> 
+                            <div class="card-body">
+                                <h5 class="card-title"></h5>
+                                <p class="card-text"> -- 여행지역 -- /  </p>
+                            </div>
+                
+                            <div class="card-like">
+                                <a class="card-like-a" aria-label="heart" onclick="toggle_like(&#39;&#39;, &#39;heart&#39;)">
+                                    <span class="icon is-small"><i class="fa fa-heart" aria-hidden="true"></i></span>&nbsp;<span class="like-num">2.7k</span>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="card"> 
+                            <div class="card-body">
+                                <h5 class="card-title">부산여행</h5>
+                                <p class="card-text"> 경상남도 / 해운대 </p>
+                            </div>
+                
+                            <div class="card-like">
+                                <a class="card-like-a" aria-label="heart" onclick="toggle_like(&#39;&#39;, &#39;heart&#39;)">
+                                    <span class="icon is-small"><i class="fa fa-heart" aria-hidden="true"></i></span>&nbsp;<span class="like-num">2.7k</span>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="card"> 
+                            <div class="card-body">
+                                <h5 class="card-title">테스트</h5>
+                                <p class="card-text"> 전라남도 / df </p>
+                            </div>
+                
+                            <div class="card-like">
+                                <a class="card-like-a" aria-label="heart" onclick="toggle_like(&#39;&#39;, &#39;heart&#39;)">
+                                    <span class="icon is-small"><i class="fa fa-heart" aria-hidden="true"></i></span>&nbsp;<span class="like-num">2.7k</span>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="card"> 
+                            <div class="card-body">
+                                <h5 class="card-title"></h5>
+                                <p class="card-text"> -- 여행지역 -- /  </p>
+                            </div>
+                
+                            <div class="card-like">
+                                <a class="card-like-a" aria-label="heart" onclick="toggle_like(&#39;&#39;, &#39;heart&#39;)">
+                                    <span class="icon is-small"><i class="fa fa-heart" aria-hidden="true"></i></span>&nbsp;<span class="like-num">2.7k</span>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="card"> 
+                            <div class="card-body">
+                                <h5 class="card-title"></h5>
+                                <p class="card-text"> -- 여행지역 -- /  </p>
+                            </div>
+                
+                            <div class="card-like">
+                                <a class="card-like-a" aria-label="heart" onclick="toggle_like(&#39;&#39;, &#39;heart&#39;)">
+                                    <span class="icon is-small"><i class="fa fa-heart" aria-hidden="true"></i></span>&nbsp;<span class="like-num">2.7k</span>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="card"> 
+                            <div class="card-body">
+                                <h5 class="card-title"></h5>
+                                <p class="card-text"> -- 여행지역 -- /  </p>
+                            </div>
+                
+                            <div class="card-like">
+                                <a class="card-like-a" aria-label="heart" onclick="toggle_like(&#39;&#39;, &#39;heart&#39;)">
+                                    <span class="icon is-small"><i class="fa fa-heart" aria-hidden="true"></i></span>&nbsp;<span class="like-num">2.7k</span>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="card"> 
+                            <div class="card-body">
+                                <h5 class="card-title"></h5>
+                                <p class="card-text"> -- 여행지역 -- /  </p>
+                            </div>
+                
+                            <div class="card-like">
+                                <a class="card-like-a" aria-label="heart" onclick="toggle_like(&#39;&#39;, &#39;heart&#39;)">
+                                    <span class="icon is-small"><i class="fa fa-heart" aria-hidden="true"></i></span>&nbsp;<span class="like-num">2.7k</span>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="card"> 
+                            <div class="card-body">
+                                <h5 class="card-title"></h5>
+                                <p class="card-text"> -- 여행지역 -- /  </p>
+                            </div>
+                
+                            <div class="card-like">
+                                <a class="card-like-a" aria-label="heart" onclick="toggle_like(&#39;&#39;, &#39;heart&#39;)">
+                                    <span class="icon is-small"><i class="fa fa-heart" aria-hidden="true"></i></span>&nbsp;<span class="like-num">2.7k</span>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="card"> 
+                            <div class="card-body">
+                                <h5 class="card-title"></h5>
+                                <p class="card-text"> -- 여행지역 -- /  </p>
+                            </div>
+                
+                            <div class="card-like">
+                                <a class="card-like-a" aria-label="heart" onclick="toggle_like(&#39;&#39;, &#39;heart&#39;)">
+                                    <span class="icon is-small"><i class="fa fa-heart" aria-hidden="true"></i></span>&nbsp;<span class="like-num">2.7k</span>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="card"> 
+                            <div class="card-body">
+                                <h5 class="card-title"></h5>
+                                <p class="card-text"> -- 여행지역 -- /  </p>
+                            </div>
+                
+                            <div class="card-like">
+                                <a class="card-like-a" aria-label="heart" onclick="toggle_like(&#39;&#39;, &#39;heart&#39;)">
+                                    <span class="icon is-small"><i class="fa fa-heart" aria-hidden="true"></i></span>&nbsp;<span class="like-num">2.7k</span>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="card"> 
+                            <div class="card-body">
+                                <h5 class="card-title"></h5>
+                                <p class="card-text"> -- 여행지역 -- /  </p>
+                            </div>
+                
+                            <div class="card-like">
+                                <a class="card-like-a" aria-label="heart" onclick="toggle_like(&#39;&#39;, &#39;heart&#39;)">
+                                    <span class="icon is-small"><i class="fa fa-heart" aria-hidden="true"></i></span>&nbsp;<span class="like-num">2.7k</span>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        </div>
+</div>
+
+<div class="blank"><h2>Sparta밑부터 후작업. 카드 등록후 카드 정렬, 카드 클릭시 지정한 템플릿으로 보여주기, !</h2></div>
+
+
+<div class="card-wrap">
+    <div class="card-bg"></div>
+    <div class="card-container">
+        <div class="card-temp">
+            <h1 class="card-temp-title">가족과 함께하는 속초여행</h1>
+            <ul>
+                <li class="card-temp-location">지역 : 강원도 / 속초시</li>
+                <li class="card-temp-date">기간 : 2022/03/01 ~ 2022/03/03</li>
+                <li class="card-temp-share_ppl">
+                    동행인 : user1 user2 user3 user4
+                </li>
+            </ul>
+        </div>
+
+        <!-- detail table 세부일정 테이블 -->
+
+        <div class="detail-title">
+            세부일정
+            <button onclick="" type="button" class="" id="btn-detail">➕</button>
+        </div>
+        <table class="contents">
+            <thead>
+            <tr>
+                <th class="tg">일차</th>
+                <th class="tg">
+                    <span>장소</span>
+                </th>
+                <th class="tg">
+                    <span>주소</span>
+                </th>
+                <th class="tg">
+                    <span>메모</span>
+                </th>
+            </tr>
+            </thead>
+            <!-- detail form template 세부일정 템플릿 -->
+            <tbody class="detail-contents">
+            <tr>
+                <td class="tg">
+                    <span>1 일차</span>
+                </td>
+                <td class="tg">
+                    <span>강릉 원조 야바위 순댓국</span>
+                </td>
+                <td class="tg">
+                    <span>강원도 속초시 ...</span>
+                </td>
+                <td class="tg-l1tf">순대도 꼭 시키세요! 주차공간 없어요.</td>
+            </tr>
+            </tbody>
+
+            <tbody class="detail-contents">
+            <tr>
+                <td class="tg">
+                    <span>1 일차</span>
+                </td>
+                <td class="tg">
+                    <span>속초닭강정</span>
+                </td>
+                <td class="tg">
+                    <span>강원도 속초시 ...</span>
+                </td>
+                <td class="tg-l1tf">2시-4시사이 한가한 편이에요.</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- btn-group -->
+        <div class="btn-wrap">
+            <button onclick="posting()" type="button" class="btn btn-dark btn-lg" id="posting-btn">
+                등록
+            </button>
+            <button onclick="window.location.href= &#39;/&#39;" type="button" class="btn btn-secondary btn-lg">
+                취소
+            </button>
+        </div>
+    </div>
+</div>
+
+
+
+
+    </card>
+
+
+</body></html>
