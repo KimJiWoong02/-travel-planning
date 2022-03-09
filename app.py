@@ -26,21 +26,23 @@ def home_decorator():
     def _home_decorator(f):
         @wraps(f)
         def __home_decorator(*args, **kwargs):
-            accessToken_receive = request.cookies.get('accessToken')
-            refreshToken_receive = request.cookies.get('refreshToken')
+            accessToken_receive = request.cookies.get(app.config['ACCESSTOKEN'])
+            refreshToken_receive = request.cookies.get(app.config['REFRESHTOKEN'])
 
             # AccessToken이 유효한가? True or False
             isValidAccessToken = getAccessToken()
 
             # RefreshToken이 유효한가? True or False
             isValidRefreshToken = getRefreshToken()
-
+            print('deco')
             if isValidAccessToken and isValidRefreshToken:
+                print('1')
                 # AccessToken과 RefreshToken 모두 유효 => 계속 진행
                 result = f()
                 return result
 
             elif isValidAccessToken is not True and isValidRefreshToken:
+                print('2')
                 # AccessToken 만료 RefreshToken 유효 => AccessToken 재발급
                 old_payload = jwt.decode(refreshToken_receive, app.config['SECRET_KEY'], algorithms=['HS256'])
                 payload = {
@@ -54,6 +56,7 @@ def home_decorator():
                 return result
 
             elif isValidAccessToken and isValidRefreshToken is not True:
+                print('3')
                 # AccessToken 유효 RefreshToken 만료 => RefreshToken 재발급
                 old_payload = jwt.decode(accessToken_receive, app.config['SECRET_KEY'], algorithms=['HS256'])
                 # refreshToken 생성 및 DB저장
@@ -63,13 +66,14 @@ def home_decorator():
                 }
                 refreshToken = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
 
-                db.users.update_one({'id': old_payload['id']}, {'$set': {'refreshToken': refreshToken}})
+                db.users.update_one({'id': old_payload['id']}, {'$set': {app.config['REFRESHTOKEN']: refreshToken}})
 
                 result = make_response(f())
                 result.set_cookie("refreshToken", refreshToken)
                 return result
 
             else:
+                print('4')
                 # AccessToken과 RefreshToken 모두 만료 => 로그인 페이지
                 return redirect(url_for("login"))
 
@@ -79,18 +83,21 @@ def home_decorator():
 
 
 def getAccessToken():
-    accessToken_receive = request.cookies.get('accessToken')
+    accessToken_receive = request.cookies.get(app.config['ACCESSTOKEN'])
     try:
         jwt.decode(accessToken_receive, app.config['SECRET_KEY'], algorithms=['HS256'])
+        print('A 1')
         return True
     except jwt.ExpiredSignatureError:  # 유효기간 만료된 토큰 디코드 시
+        print('A 2')
         return False
     except jwt.exceptions.DecodeError:  # 해당 token이 올바르게 디코딩되지 않았다면
+        print('A 3')
         return False
 
 
 def getRefreshToken():
-    refreshToken_receive = request.cookies.get('refreshToken')
+    refreshToken_receive = request.cookies.get(app.config['REFRESHTOKEN'])
     try:
         payload = jwt.decode(refreshToken_receive, app.config['SECRET_KEY'], algorithms=['HS256'])
 
@@ -98,13 +105,17 @@ def getRefreshToken():
         user_info = db.users.find_one({"id": payload['id']})
 
         # 쿠키에 저장된 refreshToken와 DB에 저장된 refreshToken가 같은지 비교
-        if refreshToken_receive == user_info['refreshToken']:
+        if refreshToken_receive == user_info[app.config['REFRESHTOKEN']]:
+            print('R 1')
             return True
         else:
+            print('R 2')
             return False
     except jwt.ExpiredSignatureError:  # 유효기간 만료된 토큰 디코드 시
+        print('R 3')
         return False
     except jwt.exceptions.DecodeError:  # 해당 token이 올바르게 디코딩되지 않았다면
+        print('R 4')
         return False
 
 
@@ -116,10 +127,10 @@ def getRefreshToken():
 @app.route('/')
 @home_decorator()
 def home():
-    token_receive = request.cookies.get('mytoken')
+    token_receive = request.cookies.get(app.config['ACCESSTOKEN'])
     try:
         payload = jwt.decode(token_receive, app.config['SECRET_KEY'], algorithms=['HS256'])
-        user_info = db.users.find_one({"username": payload["id"]})
+        user_info = db.users.find_one({"id": payload["id"]})
         return render_template('index.html', user=user_info)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return render_template('index.html', user=None)
@@ -236,17 +247,17 @@ def api_login():
             'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=app.config['REFRESHTOKENVALIDTIME'])
         }
         refreshToken = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
-        db.users.update_one({'id': id_receive}, {'$set': {'refreshToken': refreshToken}})
+        db.users.update_one({'id': id_receive}, {'$set': {app.config['REFRESHTOKEN']: refreshToken}})
 
         # accessToken 생성
         payload = {
             'id': id_receive,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(app.config['ACCESSTOKENVALIDTIME'])
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=app.config['ACCESSTOKENVALIDTIME'])
         }
         accessToken = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
 
         # token을 반환.
-        return jsonify({'result': 'success', 'accessToken': accessToken, 'refreshToken': refreshToken})
+        return jsonify({'result': 'success', app.config['ACCESSTOKEN']: accessToken, app.config['REFRESHTOKEN']: refreshToken})
     # 찾지 못하면
     else:
         return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})

@@ -6,3 +6,7 @@ MONGODB = 'mongodb+srv://test:sparta@cluster0.ugilq.mongodb.net/myFirstDatabase?
 ACCESSTOKENVALIDTIME = 10
 # refreshToken의 유효시간
 REFRESHTOKENVALIDTIME = 20
+# accessToken의 이름
+ACCESSTOKEN = 'accessToken'
+# refreshToken의 이름
+REFRESHTOKEN = 'refreshToken'
