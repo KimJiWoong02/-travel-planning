@@ -61,6 +61,8 @@ $(document).ready(() => {
 
         window.location.href = query
     })
+
+    $('#planModal').on("show.bs.modal", onPlanModalShow)
 })
 
 function loadPlans(query) {
@@ -90,7 +92,7 @@ function createPlanCard(plan) {
     // hashTags.forEach(tag => hashTagsHtml += `<span class="pe-2">#${tag}</span>`)
 
     return `<div class="col" id=${_id}>
-                <div class="card">
+                <div class="card" data-bs-toggle="modal" data-bs-target="#planModal" data-id="${_id}">
                     <img src="${image}"class="card-img-top">
                     <div class="card-body">
                         <h5 class="card-title text-dark">${title}</h5>
@@ -163,4 +165,26 @@ function getQueryString(query = undefined) {
         usp.append(key, String(value))
     })
     return usp.toString()
+}
+
+function onPlanModalShow(event) {
+    $.ajax({
+        type: 'GET',
+        url: `/api/plans/${event.relatedTarget.dataset.id}`,
+        success: drawPlanModal
+    })
+}
+
+function drawPlanModal(plan) {
+    const header = `${plan.host}님의 여행계획`
+    let html = ''
+
+    console.log(plan)
+    Object.entries(plan).forEach(([key, value]) => {
+        html += `<p class="fw-bold text-primary">${key}</p>
+                <p>${value}</p>`
+    })
+    $("#planModal .modal-header").html(header)
+    $("#planModal .modal-body").html(html)
+
 }
