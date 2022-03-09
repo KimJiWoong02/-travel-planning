@@ -10,6 +10,8 @@ import datetime
 import hashlib
 # decorator jwt 검사를 위한 미들웨어로 활용
 from functools import wraps
+from bson import ObjectId
+
 
 app = Flask(__name__)
 # config 파일 참조
@@ -125,12 +127,13 @@ def getRefreshToken():
 
 # 메인페이지 Route
 @app.route('/')
-@home_decorator()
+# @home_decorator()
 def home():
     token_receive = request.cookies.get(app.config['ACCESSTOKEN'])
     try:
         payload = jwt.decode(token_receive, app.config['SECRET_KEY'], algorithms=['HS256'])
         user_info = db.users.find_one({"id": payload["id"]})
+        print(user_info)
         return render_template('index.html', user=user_info)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return render_template('index.html', user=None)
@@ -170,6 +173,12 @@ def get_plans():
 
     return jsonify({'plans': results, 'last_page': last_page, 'page': page, 'none': none})
 
+
+@app.route('/api/plans/<id>', methods=['GET'])
+def get_plan(id):
+    plan = db.plan.find_one({'_id': ObjectId(id)})
+    plan['_id'] = str(plan['_id'])
+    return jsonify(plan)
 
 #################################
 ##        로그인 회원가입         ##
