@@ -3,10 +3,12 @@ from flask import Blueprint, render_template, redirect, url_for, request, jsonif
 from pymongo import MongoClient
 from werkzeug.utils import secure_filename
 import config
+import certifi
 
 SECRET_KEY = 'SPARTA'
 
-client = MongoClient(config.MONGODB)
+client = MongoClient('mongodb+srv://test:sparta@cluster0.ugilq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
+                     tlsCAFile=certifi.where())
 db = client.travel
 
 bp = Blueprint('user', __name__, url_prefix='/user')
