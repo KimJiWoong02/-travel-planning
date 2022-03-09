@@ -1,3 +1,5 @@
+import os.path
+
 import jwt
 from flask import Blueprint, render_template, redirect, url_for, request, jsonify
 from pymongo import MongoClient
@@ -10,6 +12,8 @@ client = MongoClient('mongodb+srv://test:sparta@cluster0.ugilq.mongodb.net/myFir
 db = client.travel
 
 bp = Blueprint('user', __name__, url_prefix='/user')
+
+print(dir(bp))
 
 
 @bp.route('/<id>')
@@ -42,7 +46,7 @@ def edit_profile():
             extension = filename.split('.')[-1]
             file_path = f'profile_pics/{id}.{extension}'
 
-            file.save('static/'+file_path)
+            file.save(os.path.join(bp.root_path, './static/', file_path))
             new_doc['img'] = filename
             new_doc['img_path'] = file_path
 
