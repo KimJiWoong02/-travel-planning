@@ -6,6 +6,7 @@ import math
 import jwt
 from bson import ObjectId
 
+import user
 from login import blue_login
 
 app = Flask(__name__)
@@ -140,7 +141,7 @@ def plan_get():
 
 
 # 프로필 블루프린트 등록 (연결)
-# app.register_blueprint(user.bp)
+app.register_blueprint(user.bp)
 
 
 ## local port
