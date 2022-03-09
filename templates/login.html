@@ -1,10 +1,115 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
+
+    <!-- Webpage Title -->
+    <title>로그인</title>
+
+    <!-- Required meta tags -->
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400;500;600;700;900&display=swap"
+          rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="../static/login.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+
+    <script>
+        // 로그인 작업
+        function sign_up() {
+            let id = $('#userID').val()
+            let pw = $('#userPassword').val()
+
+            // err 메세지 hide
+            err_msg_hide()
+
+            // id와 pw의 값이 있는지 확인
+            if (isBlank(id)) {
+                $('#err_empty_id').show()
+                return
+            } else if (isBlank(pw)) {
+                $('#err_empty_pw').show()
+                return
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/api/sign_in",
+                data: {id_give: id, pw_give: pw},
+                success: function (response) {
+                    console.log("sign_in return")
+                    if (response['result'] == 'success') {
+                        // 쿠키에 accessToken, refreshToken 저장
+                        $.cookie('accessToken', response['accessToken'], {httponly: true});
+                        $.cookie('refreshToken', response['refreshToken'], {httponly: true});
+                        window.location.href = '/'
+                    } else {
+                        // 아이디 비밀번호가 틀리면 메세지 표시
+                        $('#err_common').show()
+                    }
+                }
+            })
+        }
+
+        // 문자열이 blank인지 확인
+        function isBlank(str) {
+            return (!str || str.length === 0);
+        }
+
+        // 모든 err 메세지를 hide
+        function err_msg_hide() {
+            $('#err_empty_id').hide()
+            $('#err_empty_pw').hide()
+            $('#err_common').hide()
+        }
+    </script>
+
 </head>
 <body>
-ww
+<div class="wrap">
+    <div class="mypost">
+        <h4 class="title">로그인</h4>
+
+        <div class="form-floating">
+            <input type="text" class="form-control" id="userID" placeholder="ID" maxlength='40'>
+            <label for="userID">아이디</label>
+        </div>
+
+        <div class="form-floating">
+            <input type="password" class="form-control" id="userPassword" placeholder="Password" maxlength='16'>
+            <label for="userPassword">비밀번호</label>
+        </div>
+
+        <div id="err_empty_id" class="login_error_wrap">
+            <strong>아이디</strong>를 입력해 주세요.
+        </div>
+        <div id="err_empty_pw" class="login_error_wrap">
+            <strong>비밀번호</strong>를 입력해 주세요.
+        </div>
+        <div id="err_common" class="login_error_wrap">
+            아이디(로그인 전용 아이디) 또는 비밀번호를 잘못 입력했습니다.
+            <br>
+            입력하신 내용을 다시 확인해주세요.
+        </div>
+
+        <button onclick="sign_up()" type="button" class="btn btn-primary">로그인</button>
+
+    </div>
+</div>
+<script>
+    // 페이지 로딩 후 error 메세지 hide
+    err_msg_hide()
+</script>
 </body>
 </html>
