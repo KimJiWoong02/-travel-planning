@@ -2,7 +2,7 @@ const navMax = 5
 
 $(document).ready(() => {
     let query = window.location.search
-
+    
     loadPlans(query)
 
     function getQueryStringValue(key) {

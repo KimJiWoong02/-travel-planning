@@ -1,4 +1,4 @@
-import os.path
+import os
 import jwt
 from flask import Blueprint, render_template, redirect, url_for, request, jsonify
 from pymongo import MongoClient

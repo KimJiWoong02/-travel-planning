@@ -7,6 +7,7 @@ import jwt
 from bson import ObjectId
 
 import user
+from checkToken import home_decorator
 from login import blue_login
 
 app = Flask(__name__)
@@ -102,6 +103,7 @@ app.register_blueprint(blue_login)
 
 
 @app.route("/plan", methods=["POST"])
+@home_decorator()
 def plan_post():
     image_receive = request.form['image_give']
     title_receive = request.form['title_give']
