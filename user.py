@@ -49,6 +49,10 @@ def edit_profile():
             file_path = f'profile_pics/{id}.{extension}'
 
             file.save(os.path.join(bp.root_path, './static/', file_path))
+<<<<<<< HEAD
+=======
+
+>>>>>>> 239977880d2d208df5800656d72fbb7cbe2ba4d2
             new_doc['img'] = filename
             new_doc['img_path'] = file_path
 
