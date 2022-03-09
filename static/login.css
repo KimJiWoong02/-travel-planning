@@ -24,7 +24,7 @@
 
 .mypost > button {
     width: 90%;
-    margin: 50px auto 20px auto;
+    margin: 20px auto 20px auto;
     display: block;
 }
 
@@ -37,13 +37,10 @@
     width: 90%;
 }
 
-.register_error_wrap{
-    margin: auto;
+.login_error_wrap{
+    margin: 30px auto 0px auto;
     width: 90%;
     display: block;
-}
-
-.register_error_wrap > p{
-    font-size: small;
     color: red;
+    font-size: small;
 }
