@@ -32,15 +32,6 @@
 }
 
 
-* {
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  margin-top: 100px;
-}
-
 .hide, .detail-hide {
   display: none;
 }
@@ -62,6 +53,7 @@ body {
   -webkit-user-select: none;
   touch-action: manipulation;
 }
+
 .btn:focus {
   box-shadow: inset 0px 0.8px 0px -0.25px rgba(255, 255, 255, 0.2), 0px 0.5px 1.5px rgba(54, 122, 246, 0.25), 0px 0px 0px 3.5px rgba(58, 108, 217, 0.5);
   outline: 0;
