@@ -75,8 +75,8 @@
                     <label class="form-label fw-bold" for="sort">정렬</label>
                     <select class="form-select" id="sort" name="sort">
                         <option value="">전체</option>
-                        <option value="좋아요">인기순</option>
                         <option value="최신">최신순</option>
+                        <option value="과거">과거순</option>
                     </select>
                 </div>
             </div>
@@ -110,19 +110,6 @@
                 <div class="modal-body">
                     <form id='card-form' class="card-wrap " method="POST">
                         <div class="card-container">
-                             <div class="mb-3">
-                                <label for="card-image" class="form-label fw-bold"
-                                  >가고싶은 여행지로 카드를 꾸며보세요.</label>
-                                <input
-                                  class="form-control"
-                                  type="file"
-                                  name="file"
-                                  id="card-image"
-                                  placeholder="가고싶은 곳의 사진을 올려주세요."
-                                  required
-                                />
-
-                              </div>
                             <div class="title mb-3">
                                 <label for="card-title" class="form-label fw-bold">여행주제</label>
                                 <input
@@ -130,6 +117,19 @@
                                         class="form-control"
                                         id="card-title"
                                         name="title"
+                                        required
+                                />
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="card-image" class="form-label fw-bold"
+                                >가고싶은 여행지로 이미지를 꾸며보세요.</label>
+                                <input
+                                        class="form-control"
+                                        type="url"
+                                        name="url"
+                                        id="card-image"
+                                        placeholder="URL을 넣어주세요."
                                         required
                                 />
                             </div>
@@ -197,7 +197,7 @@
                                 </div>
 
                                 <div class="share-ppl mb-3">
-                                    <label class="fw-bold">동행인 추가</label>
+                                    <label class="fw-bold">여행 메이트</label>
                                     <input
                                             type="text"
                                             class="form-control"
@@ -207,7 +207,6 @@
                                             minlength="4"
                                             maxlength="8"
                                             size="10"
-
                                     />
                                 </div>
 
@@ -322,10 +321,11 @@
                     this is body
                 </div>
                 <div class="modal-footer">
-                    this is footer
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
     </div>
+
 </body>
 </html>

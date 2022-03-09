@@ -139,7 +139,10 @@ function addDetailForm() {
     detailTableRow.append(card);
     hideDetailForm();
     tableToArr();
-
+    detailDate.value = ""
+    detailAddress.value = ""
+    detailLocation.value = ""
+    detailNotes.value = ""
     }
 }
 

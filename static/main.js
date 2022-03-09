@@ -2,7 +2,7 @@ const navMax = 5
 
 $(document).ready(() => {
     let query = window.location.search
-    
+
     loadPlans(query)
 
     function getQueryStringValue(key) {
@@ -87,9 +87,7 @@ function onSuccess(response) {
 }
 
 function createPlanCard(plan) {
-    const {image, title, host, _id, date_start, date_end, like} = plan
-    // let hashTagsHtml = ''
-    // hashTags.forEach(tag => hashTagsHtml += `<span class="pe-2">#${tag}</span>`)
+    const {image, title, host, _id, date_start, date_end} = plan
 
     return `<div class="col" id=${_id}>
                 <div class="card" data-bs-toggle="modal" data-bs-target="#planModal" data-id="${_id}">
@@ -97,9 +95,8 @@ function createPlanCard(plan) {
                     <div class="card-body">
                         <h5 class="card-title text-dark">${title}</h5>
                         <p class="card-text text-muted small">${date_start} ~ ${date_end}</p>
-                        <div class="d-flex justify-content-end gap-2">
+                        <div class="d-flex justify-content-end">
                             <span class="card-text text-muted">Host - ${host}</span>
-                            <i class="bi bi-heart-fill"> ${like}</i>
                         </div>
                     </div>
                 </div>
@@ -180,7 +177,6 @@ function onPlanModalShow(event) {
 
 function drawPlanModal(plan) {
     const header = `${plan.host}님의 여행계획`
-    const like = `<i onclick="" class="bi bi-heart-fill">${plan.like}</i>`
     let html = ''
 
     console.log(plan)
@@ -190,5 +186,4 @@ function drawPlanModal(plan) {
     })
     $("#planModal .modal-header").html(header)
     $("#planModal .modal-body").html(html)
-    $('#planModal .modal-footer').html(like)
 }

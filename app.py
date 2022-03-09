@@ -46,6 +46,8 @@ def get_plans():
     page = request.args.get('page', 1, type=int)
     limit = 12
 
+    sorting = 1 if sort == "과거" else -1
+
     option = {}
 
     if len(location) > 0:
@@ -54,7 +56,7 @@ def get_plans():
     if len(query) > 0:
         option['location'] = query
 
-    plans = list(db.plan.find(option).skip((page - 1) * limit).limit(limit).sort(sort, -1))
+    plans = list(db.plan.find(option).skip((page - 1) * limit).limit(limit).sort("date", sorting))
 
     results = []
     for document in plans:
