@@ -94,7 +94,7 @@ function createPlanCard(plan) {
                     <img src="${image}"class="card-img-top">
                     <div class="card-body">
                         <h5 class="card-title text-dark">${title}</h5>
-                        <p class="card-text text-muted">${date_start} ~ ${date_end}</p>
+                        <p class="card-text text-muted small">${date_start} ~ ${date_end}</p>
                         <span class="card-text text-muted">Host - ${host}</span>
                     </div>
                 </div>
