@@ -7,6 +7,7 @@ import jwt
 from bson import ObjectId
 # 토큰에 만료시간을 줘야하기 때문에, datetime 모듈도 사용
 import datetime
+from pytz import timezone
 import user
 from checkToken import getAccessToken, getRefreshToken, home_decorator
 from login import blue_login
@@ -170,6 +171,8 @@ def plan_post():
     user = db.users.find_one({"user_id": payload["id"]})
     user_id = user['user_id']
 
+    date = datetime.datetime.now(timezone('Asia/Seoul'))
+
     image_receive = request.form['image_give']
     title_receive = request.form['title_give']
     area_receive = request.form['area_give']
@@ -180,6 +183,7 @@ def plan_post():
 
     doc = {
         "user_id": user_id,
+        "date": date,
         'image':image_receive,
         'title':title_receive,
         'area':area_receive,
