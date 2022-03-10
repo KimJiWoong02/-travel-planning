@@ -23,23 +23,10 @@ def user():
         payload = jwt.decode(token_receive, config.SECRET_KEY, algorithms=['HS256'])
 
         user_info = db.users.find_one({"user_id": payload['id']}, {"_id": False})
-        return render_template('user.html', user_info=user_info)
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("home"))
-
-
-@bp.route('/myplan', methods=['GET'])
-def user_plan():
-    token_receive = request.cookies.get(config.ACCESSTOKEN)
-    try:
-        payload = jwt.decode(token_receive, config.SECRET_KEY, algorithms=['HS256'])
-
         myplan_list = list(db.plans.find({"user_id": payload['id']}, {"_id": False}))
-        return jsonify({'myplan': myplan_list})
+        return render_template('user.html', user_info=user_info, myplan_list=myplan_list)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
-
-
 
 
 @bp.route('/edit', methods=['POST'])

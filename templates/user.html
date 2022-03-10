@@ -74,6 +74,10 @@
         align-items: center;
       }
 
+      .modal-content {
+        width: 800px;
+      }
+
       .image {
         width: 96px;
         height: 96px;
@@ -110,9 +114,7 @@
           <figure class="media-left" style="align-self: center">
             <a class="image" href="#">
               {% if user_info.img_path %}
-              <img
-                src="{{ url_for('static', filename=user_info.img_path) }}"
-              />
+              <img src="{{ url_for('static', filename=user_info.img_path) }}" />
               {% else %}
               <img
                 src="{{ url_for('static', filename='profile_pics/default.png') }}"
@@ -220,7 +222,41 @@
       <section
         id="planList"
         class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4"
-      ></section>
+      >
+        {% if myplan_list %} {% for plan in myplan_list %}
+        <div class="col" id="{{plan._id}}">
+          <div
+            class="card"
+            data-bs-toggle="modal"
+            data-bs-target="#planModal"
+            data-id="{{
+            plan._id
+            }}"
+          >
+            <img
+              src="{{plan.image}}"
+              class="card-img-top"
+              style="height: 13rem"
+            />
+            <div class="card-body">
+              <h5 class="card-title text-dark">{{plan.title}}</h5>
+              <p class="card-text text-muted small">
+                {{plan.dateStart}} ~ {{ plan.dateEnd}}
+              </p>
+              <div class="d-flex justify-content-end">
+                <span class="card-text text-muted"
+                  >Host - {{plan.user_id}}</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %} {% else %}
+        <div class="d-flex justify-content-center mt-5">
+          <h1>아직 작성한 여행계획이 없습니다.</h1>
+        </div>
+        {% endif %}
+      </section>
     </main>
   </body>
 </html>
