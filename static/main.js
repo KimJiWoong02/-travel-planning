@@ -239,7 +239,7 @@ const newArr = arr.map((item) => {
         </div>
     </div>
 </div>
-    `
+ `
 
     console.log(plan)
 
