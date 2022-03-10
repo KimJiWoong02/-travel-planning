@@ -98,7 +98,7 @@ function createPlanCard(plan) {
                         <h5 class="card-title text-dark">${title}</h5>
                         <p class="card-text text-muted small">${dateStart} ~ ${dateEnd}</p>
                         <div class="d-flex justify-content-end">
-                            <span class="card-text text-muted">Host - ${user_id}</span>
+                            <span class="card-text text-muted">by ${user_id}</span>
                         </div>
                     </div>
                 </div>
@@ -181,7 +181,6 @@ function drawPlanModal(plan) {
     const header = `${plan['user_id']}님의 여행계획`
     let html = ''
 
-    console.log(plan)
     Object.entries(plan).forEach(([key, value]) => {
         html += `<p class="fw-bold text-primary">${key}</p>
                 <p>${value}</p>`
