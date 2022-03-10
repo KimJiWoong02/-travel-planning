@@ -8,7 +8,7 @@ from bson import ObjectId
 # 토큰에 만료시간을 줘야하기 때문에, datetime 모듈도 사용
 import datetime
 import user
-from checkToken import getAccessToken, getRefreshToken
+from checkToken import getAccessToken, getRefreshToken, home_decorator
 from login import blue_login
 
 app = Flask(__name__)
@@ -21,7 +21,7 @@ db = client.travel
 
 
 #################################
-##           메인페이지           ##
+##           메인페이지          ##
 #################################
 
 # 메인페이지 Route
