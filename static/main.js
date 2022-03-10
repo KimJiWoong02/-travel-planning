@@ -89,8 +89,6 @@ function onSuccess(response) {
 function createPlanCard(plan) {
     let {image, title, user_id, _id, dateStart, dateEnd} = plan
 
-    image = image ? image : "https://i.pinimg.com/originals/84/ae/5f/84ae5fdb921e5f56473cf4cffca015b2.jpg"
-
     return `<div class="col" id=${_id}>
                 <div class="card" data-bs-toggle="modal" data-bs-target="#planModal" data-id="${_id}">
                     <div class="card-img-top" style="height: 13rem; background-image: url(${image}); background-size: cover; background-position: center"></div>

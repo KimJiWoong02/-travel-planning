@@ -181,6 +181,8 @@ def plan_post():
     date_end_receive = request.form['date_end_give']
     detail_table_receive = request.form['detail_table_give']
 
+    image_receive = image_receive if image_receive else "https://i.pinimg.com/originals/84/ae/5f/84ae5fdb921e5f56473cf4cffca015b2.jpg"
+
     doc = {
         "user_id": user_id,
         "date": date,
