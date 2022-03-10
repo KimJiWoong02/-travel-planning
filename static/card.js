@@ -2,6 +2,7 @@
 // get 요청 API code
   function listing() {
             $("#cards-posted").empty()
+
             $.ajax({
                 type: 'GET',
                 url: '/plan',
@@ -43,9 +44,29 @@
 
 function posting() {
     // 상세폼이 빈칸일시 alert & 박스 안없어지게 하기 notes는 제외
-    // if ($('.form-control').val() == '') {
-    // alert("내용을 입력하세요.");
-    // } else {
+    if($('#card-title').val() == '' ) {
+        alert("제목을 입력하세요.");
+        $('#card-title').focus();
+        e.preventDefault();
+    }
+   if($('#card-image').val() == '' ) {
+        alert("이미지 url를 넣어주세요..");
+        $('#card-image').focus();
+        e.preventDefault();
+   }
+   if($('#card-area').val() == "selected" ) {
+        alert("지역을 선택해주세요.");
+        $('#card-area').focus();
+        e.preventDefault();
+   }
+   if($('#card-date-start').val() == '' && $('#card-date-start').val() == '') {
+        alert("여행 기간을 설정해주세요");
+        $('#card-date-start').focus();
+        e.preventDefault();
+   }
+
+
+    else {
         let image =  $('#card-image').val()
         let title = $('#card-title').val()
         let area = $('#card-area').val()
@@ -73,7 +94,7 @@ function posting() {
                 window.location.reload()
             }
         })
-   // }
+    }
 }
 
 // 세부일정 폼 추가
