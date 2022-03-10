@@ -100,7 +100,7 @@ def home():
 def get_plans():
     location = request.args.get('location', "")
     query = request.args.get('query', "")
-    sort = request.args.get('sort', "date")
+    sort = request.args.get('sort', -1)
     page = request.args.get('page', 1, type=int)
     limit = 8
 
