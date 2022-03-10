@@ -102,7 +102,7 @@ def get_plans():
     query = request.args.get('query', "")
     sort = request.args.get('sort', "date")
     page = request.args.get('page', 1, type=int)
-    limit = 12
+    limit = 8
 
     sorting = 1 if sort == "과거" else -1
 
