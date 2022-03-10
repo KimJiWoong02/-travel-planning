@@ -188,6 +188,7 @@ def plan_post():
         'dateEnd':date_end_receive,
         'detailTable': detail_table_receive,
     }
+
     db.plans.insert_one(doc)
 
     return jsonify({'msg': '저장 완료!'})
