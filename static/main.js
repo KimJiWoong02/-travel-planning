@@ -88,8 +88,6 @@ function onSuccess(response) {
 
 function createPlanCard(plan) {
     const {image, title, host, _id, date_start, date_end} = plan
-    // let hashTagsHtml = ''
-    // hashTags.forEach(tag => hashTagsHtml += `<span class="pe-2">#${tag}</span>`)
 
     return `<div class="col" id=${_id}>
                 <div class="card" data-bs-toggle="modal" data-bs-target="#planModal" data-id="${_id}">
@@ -97,7 +95,9 @@ function createPlanCard(plan) {
                     <div class="card-body">
                         <h5 class="card-title text-dark">${title}</h5>
                         <p class="card-text text-muted small">${date_start} ~ ${date_end}</p>
-                        <span class="card-text text-muted">Host - ${host}</span>
+                        <div class="d-flex justify-content-end">
+                            <span class="card-text text-muted">Host - ${host}</span>
+                        </div>
                     </div>
                 </div>
             </div>`
@@ -186,5 +186,4 @@ function drawPlanModal(plan) {
     })
     $("#planModal .modal-header").html(header)
     $("#planModal .modal-body").html(html)
-
 }

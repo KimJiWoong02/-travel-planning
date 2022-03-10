@@ -103,6 +103,8 @@ def get_plans():
     page = request.args.get('page', 1, type=int)
     limit = 12
 
+    sorting = 1 if sort == "과거" else -1
+
     option = {}
 
     if len(location) > 0:
@@ -111,7 +113,7 @@ def get_plans():
     if len(query) > 0:
         option['location'] = query
 
-    plans = list(db.plan.find(option).skip((page - 1) * limit).limit(limit).sort(sort, -1))
+    plans = list(db.plan.find(option).skip((page - 1) * limit).limit(limit).sort("date", sorting))
 
     results = []
     for document in plans:
@@ -160,6 +162,7 @@ app.register_blueprint(blue_login)
 
 
 @app.route("/plan", methods=["POST"])
+@home_decorator()
 def plan_post():
     image_receive = request.form['image_give']
     title_receive = request.form['title_give']
@@ -167,9 +170,7 @@ def plan_post():
     location_receive = request.form['location_give']
     dateStart_receive = request.form['dateStart_give']
     dateEnd_receive = request.form['dateStart_give']
-    share_receive = request.form['share_give']
-
-    # detailTable_receive = request.form['detailTable_give']
+    detailTable_receive = request.form['tableData_give']
 
     doc = {
         'image':image_receive,
@@ -178,8 +179,7 @@ def plan_post():
         'location':location_receive,
         'dateStart':dateStart_receive,
         'dateEnd':dateEnd_receive,
-        'share':share_receive,
-        # 'detailTable': detailTable_receive,
+        'detailTable': detailTable_receive,
     }
     db.plans.insert_one(doc)
 

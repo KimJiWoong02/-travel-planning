@@ -27,7 +27,8 @@ def get_dummy():
             "location": "서울",
             "address": "2번가",
             "description": "영화본다"
-        }]
+        }],
+        "like": 100
     }
 
 

@@ -52,7 +52,10 @@ function posting() {
         let location = $('#card-location').val()
         let dateStart = $('#card-date-start').val()
         let dateEnd = $('#card-date-end').val()
-        let share = $('#card-share').val()
+        let tableData = tableToArr()
+
+        console.log(tableData)
+
         $.ajax({
             type: "POST",
             url: "/plan",
@@ -63,7 +66,7 @@ function posting() {
                  location_give: location,
                  dateStart_give: dateStart,
                  dateEnd_give: dateEnd,
-                 share_give: share,
+                 tableData_give: JSON.stringify(tableData)
             },
             success: function (response) {
                 alert(response['msg'])
@@ -139,7 +142,10 @@ function addDetailForm() {
     detailTableRow.append(card);
     hideDetailForm();
     tableToArr();
-
+    detailDate.value = ""
+    detailAddress.value = ""
+    detailLocation.value = ""
+    detailNotes.value = ""
     }
 }
 
@@ -183,6 +189,7 @@ function tableToArr() {
         }
     })
     console.log(detailTableArr);
+    return detailTableArr
 }
 
 // card click 했을 때
