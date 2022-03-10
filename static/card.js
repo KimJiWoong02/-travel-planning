@@ -1,4 +1,3 @@
-// get 요청 API code
 function posting() {
     // 상세폼이 빈칸일시 alert & 박스 안없어지게 하기 notes는 제외
     if ($('#card-title').val() == '') {
