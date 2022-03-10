@@ -9,7 +9,7 @@
 🎬 시연영상
 ---
 
-[__영상링크__](https://www.youtube.com/) 
+[__영상링크__](https://www.youtube.com/watch?v=UcG0HehBhys) 
 
 ###
 🪄 와이어프레임
