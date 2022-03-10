@@ -175,15 +175,76 @@ function onPlanModalShow(event) {
     })
 }
 
-function drawPlanModal(plan) {
-    const header = `${plan['user_id']}님의 여행계획`
-    let html = ''
 
-    Object.entries(plan).forEach(([key, value]) => {
-        html += `<p class="fw-bold text-primary">${key}</p>
-                <p>${value}</p>`
-    })
+function drawPlanModal(plan) {
+    const arr = JSON.parse(plan.detailTable);
+
+const newArr = arr.map((item) => {
+        console.log(item[0])
+        return `<tr>
+                    <td className="tg">
+                        <span>${item[0]}</span>
+                    </td>
+                    <td className="tg">
+                        <span>${item[1]}</span>
+                    </td>
+                    <td className="tg">
+                        <span>${item[2]}</span>
+                    </td>
+                    <td className="tg-l1tf">${item[3]}</td>
+                </tr>`;
+})
+    console.log("new", newArr);
+
+
+     const header = `<strong>${plan['user_id']}</strong> 님의 여행계획
+     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    `
+      let html = `
+    
+    <div class="card-group">
+        <div class="card-img"> <img src="${plan.image}" id="card-posted-img" class="card-img-top" alt="card-image"></div>
+        <div class="card-temp">
+           
+            <h2 class="card-temp-title modal-title fw-bold text-primary">${plan.title}</h2>
+            <ul>
+                <li class="card-temp-location ">지역 : ${plan.area} / ${plan.location}</li>
+                <li class="card-temp-date">기간 : ${plan.dateStart} ~ ${plan.dateEnd}</li>
+            </ul>
+        </div>
+
+        <!-- detail table 세부일정 테이블 -->
+        <table class="contents table">
+            <thead>
+            <tr>
+                <th class="tg">일차</th>
+                <th class="tg">
+                    <span>장소 </span>
+                </th>
+                <th class="tg">
+                    <span>주소</span>
+                </th>
+                <th class="tg">
+                    <span>메모</span>
+                </th>
+            </tr>
+            </thead>
+            <!-- detail form template 세부일정 템플릿 -->
+
+            <tbody class="detail-contents">     
+            ${newArr}
+            </tbody>
+        </table>
+        
+        </div>
+    </div>
+</div>
+    `
+
+    console.log(plan)
 
     $("#planModal .modal-header").html(header)
     $("#planModal .modal-body").html(html)
+
+
 }

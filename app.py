@@ -159,7 +159,7 @@ app.register_blueprint(blue_login)
 
 
 #################################
-##  PLANS  ##
+        ##  PLANS  ##
 #################################
 
 
@@ -197,16 +197,12 @@ def plan_post():
 
     db.plans.insert_one(doc)
 
-    return jsonify({'msg': '저장 완료!'})
+    return jsonify({'result': 'success', 'msg':'저장 완료!'})
 
 
 # Plns 가져오기
 @app.route('/plan', methods=['GET'])
 def plan_get():
-    # try :
-    #     plans = list(db.plans.find({}).sort("date", -1).limit(20))
-    #     for plan in plans:
-    #         plan["_id"] = str(plan["_id"])
 
     plan_list = list(db.plans.find({}, {'_id': False}))
     return jsonify({'plans': plan_list})
