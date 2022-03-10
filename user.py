@@ -29,11 +29,11 @@ def user():
 
 
 @bp.route('/mypage', methods=['POST'])
-def user():
+def user_plan():
     id = request.form['id']
 
     myplan_list = list(db.plans.find({"id": id}, {"_id": False}))
-    return jsonify({'myplna': myplan_list})
+    return jsonify({'myplan': myplan_list})
 
 
 @bp.route('/edit', methods=['POST'])
