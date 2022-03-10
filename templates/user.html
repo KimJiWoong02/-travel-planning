@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <!-- Webpage Title -->
-    <title>{{ user_info.name }}</title>
+    <title>{{ user_info.name }}님의 프로필</title>
 
     <!-- Required meta tags -->
     <meta charset="utf-8" />
@@ -28,6 +28,18 @@
         margin: 24px 300px 0 300px;
       }
 
+      .title-travel {
+        cursor: pointer;
+      }
+
+      .title-travel-a {
+        text-decoration: none;
+        font-size: 2rem;
+        font-weight: 500;
+        line-height: 1.2;
+        color: black;
+      }
+
       .media {
         display: flex;
         align-items: center;
@@ -40,47 +52,12 @@
     <script src="{{ url_for('static', filename='myjs.js') }}"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
-
-    <script>
-      $(document).ready(function () {
-        bsCustomFileInput.init();
-        // get_posts("{{ user_info.name }}");
-      });
-
-      function sign_out() {
-        $.removeCookie("accessToken", { path: "/" });
-        $.removeCookie("refreshToken", { path: "/" });
-        window.location.href = "/login";
-      }
-
-      function update_profile() {
-        let name = $("#input-name").val();
-        let file = $("#input-pic")[0].files[0];
-        let form_data = new FormData();
-        form_data.append("file_give", file);
-        form_data.append("name_give", name);
-
-        $.ajax({
-          type: "POST",
-          url: "/user/edit",
-          data: form_data,
-          cache: false,
-          contentType: false,
-          processData: false,
-          success: function (response) {
-            if (response["result"] == "success") {
-              alert(response["msg"]);
-              window.location.reload();
-            }
-          },
-        });
-      }
-    </script>
+    <script defer src="{{ url_for('static', filename='user.js') }}"></script>
   </head>
 
   <body>
-    <h2 class="mb-0">
-      <a class="text-decoration-none text-dark" href="/">스파르타 여행일지</a>
+    <h2 class="title-travel">
+      <a class="title-travel-a" href="/">스파르타 여행일지</a>
     </h2>
 
     <section class="hero is-white">
@@ -115,7 +92,6 @@
           </div>
         </article>
 
-        {% if status %}
         <nav id="btns-me" class="level is-mobile" style="margin-top: 2rem">
           <a
             class="button level-item has-text-centered is-sparta"
@@ -199,7 +175,6 @@
             onclick='$("#modal-edit").removeClass("is-active")'
           ></button>
         </div>
-        {% endif %}
       </div>
     </section>
 
