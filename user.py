@@ -44,7 +44,7 @@ def edit_profile():
         id = payload['id']
         name_receive = request.form['name_give']
         new_doc = {
-            'name': name_receive
+            'user_name': name_receive
         }
         if 'file_give' in request.files:
             file = request.files['file_give']
