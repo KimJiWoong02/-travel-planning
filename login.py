@@ -60,7 +60,7 @@ def api_login():
     pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
 
     # id, 암호화된pw을 가지고 해당 유저를 찾기.
-    result = db.users.find_one({'user_id': id_receive, 'pw': pw_hash})
+    result = db.users.find_one({'user_id': id_receive, 'user_pw': pw_hash})
 
     # 찾으면 JWT 토큰을 만들어 발급합니다.
     if result is not None:
