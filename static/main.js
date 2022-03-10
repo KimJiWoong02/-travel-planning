@@ -87,16 +87,16 @@ function onSuccess(response) {
 }
 
 function createPlanCard(plan) {
-    const {image, title, host, _id, date_start, date_end} = plan
+    const {image, title, user_id, _id, dateStart, dateEnd} = plan
 
     return `<div class="col" id=${_id}>
                 <div class="card" data-bs-toggle="modal" data-bs-target="#planModal" data-id="${_id}">
                     <img src="${image}"class="card-img-top">
                     <div class="card-body">
                         <h5 class="card-title text-dark">${title}</h5>
-                        <p class="card-text text-muted small">${date_start} ~ ${date_end}</p>
+                        <p class="card-text text-muted small">${dateStart} ~ ${dateEnd}</p>
                         <div class="d-flex justify-content-end">
-                            <span class="card-text text-muted">Host - ${host}</span>
+                            <span class="card-text text-muted">Host - ${user_id}</span>
                         </div>
                     </div>
                 </div>
@@ -176,7 +176,7 @@ function onPlanModalShow(event) {
 }
 
 function drawPlanModal(plan) {
-    const header = `${plan.host}님의 여행계획`
+    const header = `${plan['user_id']}님의 여행계획`
     let html = ''
 
     console.log(plan)
@@ -184,6 +184,7 @@ function drawPlanModal(plan) {
         html += `<p class="fw-bold text-primary">${key}</p>
                 <p>${value}</p>`
     })
+
     $("#planModal .modal-header").html(header)
     $("#planModal .modal-body").html(html)
 }
