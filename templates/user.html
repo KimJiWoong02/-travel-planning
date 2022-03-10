@@ -73,6 +73,26 @@
         display: flex;
         align-items: center;
       }
+
+      .image {
+        width: 96px;
+        height: 96px;
+        position: relative;
+        display: inline-block;
+        overflow: hidden;
+        border-radius: 100%;
+        margin: 0;
+      }
+
+      .image > img {
+        display: block;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        min-height: 100%;
+        min-width: 100%;
+        transform: translate(-50%, -50%);
+      }
     </style>
   </head>
 
@@ -88,15 +108,13 @@
       >
         <article class="media">
           <figure class="media-left" style="align-self: center">
-            <a class="image is-96x96" href="#">
+            <a class="image" href="#">
               {% if user_info.img_path %}
               <img
-                class="is-rounded"
                 src="{{ url_for('static', filename=user_info.img_path) }}"
               />
               {% else %}
               <img
-                class="is-rounded"
                 src="{{ url_for('static', filename='profile_pics/default.png') }}"
               />
               {% endif %}

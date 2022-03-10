@@ -72,7 +72,7 @@ function createPlanCard(plan) {
 
   return `<div class="col" id=${_id}>
                 <div class="card" data-bs-toggle="modal" data-bs-target="#planModal" data-id="${_id}">
-                    <img src="${image}"class="card-img-top">
+                    <div class="card-img-top" style="height: 13rem; background-image: url(${image}); background-size: cover; background-position: center"></div>
                     <div class="card-body">
                         <h5 class="card-title text-dark">${title}</h5>
                         <p class="card-text text-muted small">${dateStart} ~ ${dateEnd}</p>
