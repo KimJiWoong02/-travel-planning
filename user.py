@@ -28,12 +28,18 @@ def user():
         return redirect(url_for("home"))
 
 
-@bp.route('/mypage', methods=['POST'])
+@bp.route('/myplan', methods=['GET'])
 def user_plan():
-    id = request.form['id']
+    token_receive = request.cookies.get(config.ACCESSTOKEN)
+    try:
+        payload = jwt.decode(token_receive, config.SECRET_KEY, algorithms=['HS256'])
 
-    myplan_list = list(db.plans.find({"id": id}, {"_id": False}))
-    return jsonify({'myplan': myplan_list})
+        myplan_list = list(db.plans.find({"user_id": payload['id']}, {"_id": False}))
+        return jsonify({'myplan': myplan_list})
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
+
+
 
 
 @bp.route('/edit', methods=['POST'])

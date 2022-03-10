@@ -1,21 +1,7 @@
 $(document).ready(function () {
   bsCustomFileInput.init();
-  listing("{{ user_info.id }}");
+  listing();
 });
-
-function listing(id) {
-  $.ajax({
-    url: "/user/myplan",
-    data: {
-      id: id,
-    },
-    success: function (response) {
-      const { myplan } = response;
-      console.log(myplan);
-    },
-    // window.location.reload();
-  });
-}
 
 function sign_out() {
   $.removeCookie("accessToken", { path: "/" });
@@ -56,4 +42,44 @@ function update_profile() {
       );
     },
   });
+}
+
+function listing() {
+  $.ajax({
+    type: "GET",
+    url: "/user/myplan",
+    data: {},
+    success: function (response) {
+      const { myplan } = response;
+      console.log(myplan);
+
+      const planList = $("#planList");
+
+      if (!myplan) {
+        planList.replaceWith(
+          `<div class="d-flex justify-content-center mt-5"><h1>아직 작성한 여행계획이 없습니다.</h1></div>`
+        );
+        return;
+      }
+      myplan.forEach((plan) => planList.append(createPlanCard(plan)));
+    },
+    // window.location.reload();
+  });
+}
+
+function createPlanCard(plan) {
+  const { image, title, user_id, _id, dateStart, dateEnd } = plan;
+
+  return `<div class="col" id=${_id}>
+                <div class="card" data-bs-toggle="modal" data-bs-target="#planModal" data-id="${_id}">
+                    <img src="${image}"class="card-img-top">
+                    <div class="card-body">
+                        <h5 class="card-title text-dark">${title}</h5>
+                        <p class="card-text text-muted small">${dateStart} ~ ${dateEnd}</p>
+                        <div class="d-flex justify-content-end">
+                            <span class="card-text text-muted">Host - ${user_id}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
 }
