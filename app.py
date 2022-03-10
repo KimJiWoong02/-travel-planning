@@ -165,13 +165,10 @@ app.register_blueprint(blue_login)
 @home_decorator()
 def plan_post():
     token_receive = request.cookies.get(app.config['ACCESSTOKEN'])
-    user_id = ""
-    try:
-        payload = jwt.decode(token_receive, app.config['SECRET_KEY'], algorithms=['HS256'])
-        user = db.users.find_one({"id": payload["id"]})
-        user_id = user['id']
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("login"))
+    payload = jwt.decode(token_receive, app.config['SECRET_KEY'], algorithms=['HS256'])
+    user = db.users.find_one({"id": payload["id"]})
+    user_id = user['id']
+
     image_receive = request.form['image_give']
     title_receive = request.form['title_give']
     area_receive = request.form['area_give']
