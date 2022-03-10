@@ -24,11 +24,14 @@
             crossorigin="anonymous"></script>
     <script src="../static/register.js"></script>
 
+    <!-- favicon -->
+    <link rel="icon" type="image/png" href="{{url_for('static', filename='favicon.png')}}">
+
 </head>
 <body onload="init()">
 <div class="wrap">
     <div class="mypost">
-        <img class="img_logo" src="../static/img/travelog_logo.png">
+        <img class="img_logo" src="../static/logo.png">
         <h2 class="title">계정 만들기</h2>
         <div class="form-floating">
             <input type="text" class="form-control" id="userName" placeholder="name" maxlength='40'>
