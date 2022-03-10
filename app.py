@@ -42,7 +42,7 @@ def home():
         payload = jwt.decode(accessToken_receive, app.config['SECRET_KEY'], algorithms=['HS256'])
 
         # Decode한 Token값에 저장된 id로 DB의 유저 정보 찾기
-        user_info = db.users.find_one({"id": payload["id"]})
+        user_info = db.users.find_one({"user_id": payload["id"]})
 
         # 찾은 유저를 return
         return render_template('index.html', user=user_info)
@@ -61,7 +61,7 @@ def home():
         accessToken = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
 
         # Decode한 Token값에 저장된 id로 DB의 유저 정보 찾기
-        user_info = db.users.find_one({"id": old_payload["id"]})
+        user_info = db.users.find_one({"user_id": old_payload["id"]})
 
         # make_respons에 돌려줄 페이지를 넣는다. accessToken을 return시에 쿠키에 저장
         result = make_response(render_template('index.html', user=user_info))
@@ -79,10 +79,10 @@ def home():
         refreshToken = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
 
         # 유저 DB에 refreshToken값 업데이트
-        db.users.update_one({'id': old_payload['id']}, {'$set': {app.config['REFRESHTOKEN']: refreshToken}})
+        db.users.update_one({'user_id': old_payload['id']}, {'$set': {app.config['REFRESHTOKEN']: refreshToken}})
 
         # Decode한 Token값에 저장된 id로 DB의 유저 정보 찾기
-        user_info = db.users.find_one({"id": old_payload["id"]})
+        user_info = db.users.find_one({"user_id": old_payload["id"]})
 
         # make_respons에 돌려줄 페이지를 넣는다. accessToken을 return시에 쿠키에 저장
         result = make_response(render_template('index.html', user=user_info))
@@ -137,6 +137,7 @@ def get_plan(id):
     plan['_id'] = str(plan['_id'])
     return jsonify(plan)
 
+
 #################################
 ##        로그인 회원가입         ##
 #################################
@@ -157,7 +158,7 @@ app.register_blueprint(blue_login)
 
 
 #################################
-        ##  PLANS  ##
+##  PLANS  ##
 #################################
 
 
@@ -173,17 +174,18 @@ def plan_post():
     detailTable_receive = request.form['tableData_give']
 
     doc = {
-        'image':image_receive,
-        'title':title_receive,
-        'area':area_receive,
-        'location':location_receive,
-        'dateStart':dateStart_receive,
-        'dateEnd':dateEnd_receive,
+        'image': image_receive,
+        'title': title_receive,
+        'area': area_receive,
+        'location': location_receive,
+        'dateStart': dateStart_receive,
+        'dateEnd': dateEnd_receive,
         'detailTable': detailTable_receive,
     }
     db.plans.insert_one(doc)
 
-    return jsonify({'msg':'저장 완료!'})
+    return jsonify({'msg': '저장 완료!'})
+
 
 # Plns 가져오기
 @app.route('/plan', methods=['GET'])
@@ -193,14 +195,12 @@ def plan_get():
     #     for plan in plans:
     #         plan["_id"] = str(plan["_id"])
 
-        plan_list = list(db.plans.find({}, {'_id': False}))
-        return jsonify({'plans': plan_list})
-
+    plan_list = list(db.plans.find({}, {'_id': False}))
+    return jsonify({'plans': plan_list})
 
 
 # 프로필 블루프린트 등록 (연결)
 app.register_blueprint(user.bp)
-
 
 ## local port
 if __name__ == '__main__':
