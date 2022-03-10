@@ -178,7 +178,6 @@ function onPlanModalShow(event) {
 
 function drawPlanModal(plan) {
     const arr = JSON.parse(plan.detailTable);
-    console.log(arr);
 
 const newArr = arr.map((item) => {
         console.log(item[0])
@@ -197,9 +196,6 @@ const newArr = arr.map((item) => {
 })
     console.log("new", newArr);
 
-    if ( `${plan.image}` === "") {
-        $("#card-posted-img").attr("src", "https://i.ibb.co/wstbKQv/dino-reichmuth-A5r-CN8626-Ck-unsplash.jpg");
-    }
 
      const header = `<strong>${plan['user_id']}</strong> 님의 여행계획
      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
