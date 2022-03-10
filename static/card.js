@@ -52,9 +52,9 @@ function posting() {
         let location = $('#card-location').val()
         let dateStart = $('#card-date-start').val()
         let dateEnd = $('#card-date-end').val()
-        let tableData = tableToArr()
+        let detailTable = tableToArr()
 
-        console.log(tableData)
+        console.log(detailTable)
 
         $.ajax({
             type: "POST",
@@ -64,9 +64,9 @@ function posting() {
                  title_give: title,
                  area_give: area,
                  location_give: location,
-                 dateStart_give: dateStart,
-                 dateEnd_give: dateEnd,
-                 tableData_give: JSON.stringify(tableData)
+                 date_start_give: dateStart,
+                 date_end_give: dateEnd,
+                 detail_table_give: JSON.stringify(detailTable)
             },
             success: function (response) {
                 alert(response['msg'])
@@ -188,7 +188,6 @@ function tableToArr() {
             detailTableArr.push(rowDataArray);
         }
     })
-    console.log(detailTableArr);
     return detailTableArr
 }
 

@@ -108,19 +108,19 @@ def get_plans():
     option = {}
 
     if len(location) > 0:
-        option['location'] = location
+        option['area'] = location
 
     if len(query) > 0:
         option['location'] = query
 
-    plans = list(db.plan.find(option).skip((page - 1) * limit).limit(limit).sort("date", sorting))
+    plans = list(db.plans.find(option).skip((page - 1) * limit).limit(limit).sort("date", sorting))
 
     results = []
     for document in plans:
         document['_id'] = str(document['_id'])
         results.append(document)
 
-    total_count = db.plan.count_documents(option)
+    total_count = db.plans.count_documents(option)
     last_page = math.ceil(total_count / limit)
 
     none = ""
@@ -133,7 +133,7 @@ def get_plans():
 
 @app.route('/api/plans/<id>', methods=['GET'])
 def get_plan(id):
-    plan = db.plan.find_one({'_id': ObjectId(id)})
+    plan = db.plans.find_one({'_id': ObjectId(id)})
     plan['_id'] = str(plan['_id'])
     return jsonify(plan)
 
@@ -165,22 +165,31 @@ app.register_blueprint(blue_login)
 @app.route("/plan", methods=["POST"])
 @home_decorator()
 def plan_post():
+    token_receive = request.cookies.get(app.config['ACCESSTOKEN'])
+    user_id = ""
+    try:
+        payload = jwt.decode(token_receive, app.config['SECRET_KEY'], algorithms=['HS256'])
+        user = db.users.find_one({"id": payload["id"]})
+        user_id = user['id']
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("login"))
     image_receive = request.form['image_give']
     title_receive = request.form['title_give']
     area_receive = request.form['area_give']
     location_receive = request.form['location_give']
-    dateStart_receive = request.form['dateStart_give']
-    dateEnd_receive = request.form['dateStart_give']
-    detailTable_receive = request.form['tableData_give']
+    date_start_receive = request.form['date_start_give']
+    date_end_receive = request.form['date_end_give']
+    detail_table_receive = request.form['detail_table_give']
 
     doc = {
-        'image': image_receive,
-        'title': title_receive,
-        'area': area_receive,
-        'location': location_receive,
-        'dateStart': dateStart_receive,
-        'dateEnd': dateEnd_receive,
-        'detailTable': detailTable_receive,
+        "user_id": user_id,
+        'image':image_receive,
+        'title':title_receive,
+        'area':area_receive,
+        'location':location_receive,
+        'dateStart':date_start_receive,
+        'dateEnd':date_end_receive,
+        'detailTable': detail_table_receive,
     }
     db.plans.insert_one(doc)
 
