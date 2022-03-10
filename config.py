@@ -1,9 +1,9 @@
-# jwt 토큰을 만들 때 필요한 key
+# jwt 토큰 secret_key
 SECRET_KEY = 'TRAVELPLANNINGPROJECT'
 # accessToken의 유효시간 (초)
-ACCESSTOKENVALIDTIME = 600
+ACCESSTOKENVALIDTIME = 5
 # refreshToken의 유효시간 (초)
-REFRESHTOKENVALIDTIME = 600
+REFRESHTOKENVALIDTIME = 300
 # accessToken의 이름
 ACCESSTOKEN = 'accessToken'
 # refreshToken의 이름

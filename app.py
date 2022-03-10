@@ -5,8 +5,10 @@ import math
 # jwt 패키지 사용
 import jwt
 from bson import ObjectId
-
+# 토큰에 만료시간을 줘야하기 때문에, datetime 모듈도 사용
+import datetime
 import user
+from checkToken import getAccessToken, getRefreshToken
 from login import blue_login
 
 app = Flask(__name__)
@@ -24,15 +26,71 @@ db = client.travel
 
 # 메인페이지 Route
 @app.route('/')
-# @home_decorator()
 def home():
-    token_receive = request.cookies.get(app.config['ACCESSTOKEN'])
-    try:
-        payload = jwt.decode(token_receive, app.config['SECRET_KEY'], algorithms=['HS256'])
+    # 토큰값 가져오기
+    accessToken_receive = request.cookies.get(app.config['ACCESSTOKEN'])
+    refreshToken_receive = request.cookies.get(app.config['REFRESHTOKEN'])
+
+    # 토큰들이 유효한지 확인
+    isValidAccessToken = getAccessToken()
+    isValidRefreshToken = getRefreshToken()
+
+    if isValidAccessToken and isValidRefreshToken:
+        # AccessToken과 RefreshToken 모두 유효 => 계속 진행
+
+        # accessToken_receive Decode
+        payload = jwt.decode(accessToken_receive, app.config['SECRET_KEY'], algorithms=['HS256'])
+
+        # Decode한 Token값에 저장된 id로 DB의 유저 정보 찾기
         user_info = db.users.find_one({"id": payload["id"]})
-        print(user_info)
+
+        # 찾은 유저를 return
         return render_template('index.html', user=user_info)
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+
+    elif isValidAccessToken is not True and isValidRefreshToken:
+        # AccessToken 만료 RefreshToken 유효 => AccessToken 재발급
+
+        # refreshToken_receive Decode
+        old_payload = jwt.decode(refreshToken_receive, app.config['SECRET_KEY'], algorithms=['HS256'])
+
+        # accessToken 생성과 encode
+        payload = {
+            'id': old_payload['id'],
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=app.config['ACCESSTOKENVALIDTIME'])
+        }
+        accessToken = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
+
+        # Decode한 Token값에 저장된 id로 DB의 유저 정보 찾기
+        user_info = db.users.find_one({"id": old_payload["id"]})
+
+        # make_respons에 돌려줄 페이지를 넣는다. accessToken을 return시에 쿠키에 저장
+        result = make_response(render_template('index.html', user=user_info))
+        result.set_cookie("accessToken", accessToken)
+        return result
+
+    elif isValidAccessToken and isValidRefreshToken is not True:
+        # AccessToken 유효 RefreshToken 만료 => RefreshToken 재발급
+        old_payload = jwt.decode(accessToken_receive, app.config['SECRET_KEY'], algorithms=['HS256'])
+        # refreshToken 생성 및 DB저장
+        payload = {
+            'id': old_payload['id'],
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=app.config['REFRESHTOKENVALIDTIME'])
+        }
+        refreshToken = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
+
+        # 유저 DB에 refreshToken값 업데이트
+        db.users.update_one({'id': old_payload['id']}, {'$set': {app.config['REFRESHTOKEN']: refreshToken}})
+
+        # Decode한 Token값에 저장된 id로 DB의 유저 정보 찾기
+        user_info = db.users.find_one({"id": old_payload["id"]})
+
+        # make_respons에 돌려줄 페이지를 넣는다. accessToken을 return시에 쿠키에 저장
+        result = make_response(render_template('index.html', user=user_info))
+        result.set_cookie("refreshToken", refreshToken)
+        return result
+
+    else:
+        # AccessToken과 RefreshToken 모두 만료 => 로그인 X일 때 메인페이지
         return render_template('index.html', user=None)
 
 

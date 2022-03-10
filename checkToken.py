@@ -3,7 +3,7 @@ from pymongo import MongoClient
 import certifi
 # jwt 패키지 사용
 import jwt
-# 토큰에 만료시간을 줘야하기 때문에, datetime 모듈도 사용합니다.
+# 토큰에 만료시간을 줘야하기 때문에, datetime 모듈도 사용
 import datetime
 # decorator jwt 검사를 위한 미들웨어로 활용
 from functools import wraps
