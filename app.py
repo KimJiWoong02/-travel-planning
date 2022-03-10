@@ -167,8 +167,8 @@ app.register_blueprint(blue_login)
 def plan_post():
     token_receive = request.cookies.get(app.config['ACCESSTOKEN'])
     payload = jwt.decode(token_receive, app.config['SECRET_KEY'], algorithms=['HS256'])
-    user = db.users.find_one({"id": payload["id"]})
-    user_id = user['id']
+    user = db.users.find_one({"user_id": payload["id"]})
+    user_id = user['user_id']
 
     image_receive = request.form['image_give']
     title_receive = request.form['title_give']
