@@ -87,7 +87,9 @@ function onSuccess(response) {
 }
 
 function createPlanCard(plan) {
-    const {image, title, user_id, _id, dateStart, dateEnd} = plan
+    let {image, title, user_id, _id, dateStart, dateEnd} = plan
+
+    image = image ? image : "https://i.pinimg.com/originals/84/ae/5f/84ae5fdb921e5f56473cf4cffca015b2.jpg"
 
     return `<div class="col" id=${_id}>
                 <div class="card" data-bs-toggle="modal" data-bs-target="#planModal" data-id="${_id}">
