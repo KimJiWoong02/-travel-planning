@@ -25,13 +25,13 @@ def api_register():
     pw_receive = request.form['pw_give']
 
     # id 중복 체크
-    dup_id = db.users.find_one({'id': id_receive}, {'_id': False})
+    dup_id = db.users.find_one({'user_id': id_receive}, {'_id': False})
     if dup_id is not None:
         return jsonify({'result': 'fail', 'msg': '이미 사용중인 아이디입니다.'})
 
     # pw의 해쉬값
     pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
-    db.users.insert_one({'name': name_receive, 'id': id_receive, 'pw': pw_hash})
+    db.users.insert_one({'user_name': name_receive, 'user_id': id_receive, 'user_pw': pw_hash})
 
     return jsonify({'result': 'success', 'msg': '가입 성공!'})
 
@@ -42,7 +42,7 @@ def api_register():
 def api_check_dup():
     id_receive = request.args.get('id_give')
 
-    dup_id = db.users.find_one({'id': id_receive}, {'_id': False})
+    dup_id = db.users.find_one({'user_id': id_receive}, {'_id': False})
     if dup_id is not None:
         return jsonify({'result': 'fail', 'msg': '이미 사용중인 아이디입니다.'})
 
@@ -60,7 +60,7 @@ def api_login():
     pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
 
     # id, 암호화된pw을 가지고 해당 유저를 찾기.
-    result = db.users.find_one({'id': id_receive, 'pw': pw_hash})
+    result = db.users.find_one({'user_id': id_receive, 'pw': pw_hash})
 
     # 찾으면 JWT 토큰을 만들어 발급합니다.
     if result is not None:
@@ -75,7 +75,7 @@ def api_login():
             'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=current_app.config['REFRESHTOKENVALIDTIME'])
         }
         refreshToken = jwt.encode(payload, current_app.config['SECRET_KEY'], algorithm='HS256')
-        db.users.update_one({'id': id_receive}, {'$set': {current_app.config['REFRESHTOKEN']: refreshToken}})
+        db.users.update_one({'user_id': id_receive}, {'$set': {current_app.config['REFRESHTOKEN']: refreshToken}})
 
         # accessToken 생성
         payload = {

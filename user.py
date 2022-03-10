@@ -22,7 +22,7 @@ def user():
     try:
         payload = jwt.decode(token_receive, config.SECRET_KEY, algorithms=['HS256'])
 
-        user_info = db.users.find_one({"id": payload['id']}, {"_id": False})
+        user_info = db.users.find_one({"user_id": payload['id']}, {"_id": False})
         return render_template('user.html', user_info=user_info)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
@@ -58,7 +58,7 @@ def edit_profile():
             new_doc['img'] = filename
             new_doc['img_path'] = file_path
 
-        db.users.update_one({'id': payload['id']}, {'$set': new_doc})
+        db.users.update_one({'user_id': payload['id']}, {'$set': new_doc})
 
         return jsonify({"result": "success", 'msg': '프로필을 업데이트했습니다.'})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):

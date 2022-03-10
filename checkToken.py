@@ -57,7 +57,7 @@ def home_decorator():
                 }
                 refreshToken = jwt.encode(payload, current_app.config['SECRET_KEY'], algorithm='HS256')
 
-                db.users.update_one({'id': old_payload['id']}, {'$set': {current_app.config['REFRESHTOKEN']: refreshToken}})
+                db.users.update_one({'user_id': old_payload['id']}, {'$set': {current_app.config['REFRESHTOKEN']: refreshToken}})
 
                 result = make_response(f())
                 result.set_cookie("refreshToken", refreshToken)
@@ -89,7 +89,7 @@ def getRefreshToken():
         payload = jwt.decode(refreshToken_receive, current_app.config['SECRET_KEY'], algorithms=['HS256'])
 
         # 유저 ID로 유저 DB SELECT
-        user_info = db.users.find_one({"id": payload['id']})
+        user_info = db.users.find_one({"user_id": payload['id']})
 
         # 쿠키에 저장된 refreshToken와 DB에 저장된 refreshToken가 같은지 비교
         if refreshToken_receive == user_info[current_app.config['REFRESHTOKEN']]:
