@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <!-- Webpage Title -->
-    <title>{{ user_info.name }}님의 프로필</title>
+    <title>{{ user_info.user_name }}님의 프로필</title>
 
     <!-- Required meta tags -->
     <meta charset="utf-8" />
@@ -84,9 +84,8 @@
           <div class="media-content">
             <div class="content">
               <p>
-                <strong>{{ user_info['user_name'] }}</strong>
-                <small>@{{ user_info['user_id'] }}</small>
-                <br />
+                <strong>{{ user_info.user_name }}</strong>
+                <small>@{{ user_info.user_id }}</small>
               </p>
             </div>
           </div>
@@ -127,7 +126,7 @@
                         id="input-name"
                         class="input"
                         placeholder="Username"
-                        value="{{ user_info.name }}"
+                        value="{{ user_info.user_name }}"
                       />
                     </p>
                   </div>
