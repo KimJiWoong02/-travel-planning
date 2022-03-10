@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, request, session, redirect, url_for, Blueprint, make_response, current_app
+from flask import Flask, render_template, jsonify, request, session, redirect, url_for, make_response, current_app
 from pymongo import MongoClient
 import certifi
 # jwt 패키지 사용
@@ -20,14 +20,14 @@ def home_decorator():
     def _home_decorator(f):
         @wraps(f)
         def __home_decorator(*args, **kwargs):
-            accessToken_receive = request.cookies.get(current_app.config['ACCESSTOKEN'])
-            refreshToken_receive = request.cookies.get(current_app.config['REFRESHTOKEN'])
-
             # AccessToken이 유효한가? True or False
             isValidAccessToken = getAccessToken()
 
             # RefreshToken이 유효한가? True or False
             isValidRefreshToken = getRefreshToken()
+
+            accessToken_receive = request.cookies.get(current_app.config['ACCESSTOKEN'])
+            refreshToken_receive = request.cookies.get(current_app.config['REFRESHTOKEN'])
 
             if isValidAccessToken and isValidRefreshToken:
                 # AccessToken과 RefreshToken 모두 유효 => 계속 진행
@@ -39,7 +39,8 @@ def home_decorator():
                 old_payload = jwt.decode(refreshToken_receive, current_app.config['SECRET_KEY'], algorithms=['HS256'])
                 payload = {
                     'id': old_payload['id'],
-                    'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=current_app.config['ACCESSTOKENVALIDTIME'])
+                    'exp': datetime.datetime.utcnow() + datetime.timedelta(
+                        seconds=current_app.config['ACCESSTOKENVALIDTIME'])
                 }
                 accessToken = jwt.encode(payload, current_app.config['SECRET_KEY'], algorithm='HS256')
 
@@ -53,11 +54,13 @@ def home_decorator():
                 # refreshToken 생성 및 DB저장
                 payload = {
                     'id': old_payload['id'],
-                    'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=current_app.config['REFRESHTOKENVALIDTIME'])
+                    'exp': datetime.datetime.utcnow() + datetime.timedelta(
+                        seconds=current_app.config['REFRESHTOKENVALIDTIME'])
                 }
                 refreshToken = jwt.encode(payload, current_app.config['SECRET_KEY'], algorithm='HS256')
 
-                db.users.update_one({'user_id': old_payload['id']}, {'$set': {current_app.config['REFRESHTOKEN']: refreshToken}})
+                db.users.update_one({'user_id': old_payload['id']},
+                                    {'$set': {current_app.config['REFRESHTOKEN']: refreshToken}})
 
                 result = make_response(f())
                 result.set_cookie("refreshToken", refreshToken)
@@ -72,6 +75,7 @@ def home_decorator():
     return _home_decorator
 
 
+# getAccessToken이 유효한지 검사
 def getAccessToken():
     accessToken_receive = request.cookies.get(current_app.config['ACCESSTOKEN'])
     try:
@@ -83,6 +87,7 @@ def getAccessToken():
         return False
 
 
+# getRefreshToken이 유효한지 검사
 def getRefreshToken():
     refreshToken_receive = request.cookies.get(current_app.config['REFRESHTOKEN'])
     try:
@@ -100,3 +105,32 @@ def getRefreshToken():
         return False
     except jwt.exceptions.DecodeError:  # 해당 token이 올바르게 디코딩되지 않았다면
         return False
+
+
+def getTokenInID():
+    accessToken_receive = request.cookies.get(current_app.config['ACCESSTOKEN'])
+    refreshToken_receive = request.cookies.get(current_app.config['REFRESHTOKEN'])
+
+    # AccessToken이 유효한가? True or False
+    isValidAccessToken = getAccessToken()
+
+    # RefreshToken이 유효한가? True or False
+    isValidRefreshToken = getRefreshToken()
+
+    if isValidAccessToken and isValidRefreshToken:
+        # AccessToken과 RefreshToken 모두 유효 => 계속 진행
+        payload = jwt.decode(accessToken_receive, current_app.config['SECRET_KEY'], algorithms=['HS256'])
+        return payload['id']
+
+    elif isValidAccessToken is not True and isValidRefreshToken:
+        # AccessToken 만료 RefreshToken 유효 => AccessToken 재발급
+        payload = jwt.decode(refreshToken_receive, current_app.config['SECRET_KEY'], algorithms=['HS256'])
+        return payload['id']
+
+    elif isValidAccessToken and isValidRefreshToken is not True:
+        # AccessToken 유효 RefreshToken 만료 => RefreshToken 재발급
+        payload = jwt.decode(accessToken_receive, current_app.config['SECRET_KEY'], algorithms=['HS256'])
+        return payload['id']
+
+    else:
+        return
