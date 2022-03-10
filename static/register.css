@@ -29,9 +29,10 @@
 }
 
 .title {
-    margin-bottom: 50px;
+    width: 90%;
+    margin: 30px auto 30px auto;
+    text-align: left;
 }
-
 .form-floating{
     margin: 20px auto 5px auto;
     width: 90%;
@@ -46,4 +47,8 @@
 .register_error_wrap > p{
     font-size: small;
     color: red;
+}
+
+.img_logo {
+     display: block; margin: 0px auto;
 }

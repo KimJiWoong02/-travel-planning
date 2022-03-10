@@ -29,7 +29,9 @@
 }
 
 .title {
-    margin-bottom: 50px;
+    width: 90%;
+    margin: 30px auto 30px auto;
+    text-align: left;
 }
 
 .form-floating{
@@ -47,4 +49,8 @@
     display: block;
     color: red;
     font-size: small;
+}
+
+.img_logo {
+     display: block; margin: 0px auto;
 }
