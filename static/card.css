@@ -32,11 +32,6 @@
 }
 
 
-* {
-  margin: 0;
-  padding: 0;
-}
-
 body {
   margin-top: 100px;
 }
@@ -169,7 +164,7 @@ body {
 }
 .card-container {
   padding: 8%;
-  overflow: scroll:
+  overflow: scroll;
 }
 
 .contents {

@@ -1,20 +1,20 @@
-
 // get 요청 API code
-  function listing() {
-            $("#cards-posted").empty()
-            $.ajax({
-                type: 'GET',
-                url: '/plan',
-                data: {},
-                success: function (response) {
-                    let rows = response['plans']
-                    for(let i =0; i < rows.length; i++){
-                        let title = rows[i]['title']
-                        let area = rows[i]['area']
-                        let location = rows[i]['location']
+function listing() {
+    $("#cards-posted").empty()
+
+    $.ajax({
+        type: 'GET',
+        url: '/plan',
+        data: {},
+        success: function (response) {
+            let rows = response['plans']
+            for (let i = 0; i < rows.length; i++) {
+                let title = rows[i]['title']
+                let area = rows[i]['area']
+                let location = rows[i]['location']
 
 
-                        let temp = `
+                let temp = `
                         <div class="card"> 
                             <div class="card-body">
                                 <h5 class="card-title">${title}</h5>
@@ -30,23 +30,39 @@
                         </div>
                         
                         `
-                        let cardWrap = document.querySelector('#cards-posted')
-                        cardWrap.insertAdjacentHTML('beforeend', temp)
-                    }
-                    console.log(response['plans'])
+                let cardWrap = document.querySelector('#cards-posted')
+                cardWrap.insertAdjacentHTML('beforeend', temp)
+            }
+            console.log(response['plans'])
 
-                }
-            })
         }
-
+    })
+}
 
 
 function posting() {
     // 상세폼이 빈칸일시 alert & 박스 안없어지게 하기 notes는 제외
-    // if ($('.form-control').val() == '') {
-    // alert("내용을 입력하세요.");
-    // } else {
-        let image =  $('#card-image').val()
+    if ($('#card-title').val() == '') {
+        alert("제목을 입력하세요.");
+        $('#card-title').focus();
+        e.preventDefault();
+    }
+    if ($('#card-image').val() == '') {
+        alert("이미지 url를 넣어주세요..");
+        $('#card-image').focus();
+        e.preventDefault();
+    }
+    if ($('#card-area').val() == "selected") {
+        alert("지역을 선택해주세요.");
+        $('#card-area').focus();
+        e.preventDefault();
+    }
+    if ($('#card-date-start').val() == '' && $('#card-date-start').val() == '') {
+        alert("여행 기간을 설정해주세요");
+        $('#card-date-start').focus();
+        e.preventDefault();
+    } else {
+        let image = $('#card-image').val()
         let title = $('#card-title').val()
         let area = $('#card-area').val()
         let location = $('#card-location').val()
@@ -60,20 +76,25 @@ function posting() {
             type: "POST",
             url: "/plan",
             data: {
-                 image_give : image,
-                 title_give: title,
-                 area_give: area,
-                 location_give: location,
-                 date_start_give: dateStart,
-                 date_end_give: dateEnd,
-                 detail_table_give: JSON.stringify(detailTable)
+                image_give: image,
+                title_give: title,
+                area_give: area,
+                location_give: location,
+                date_start_give: dateStart,
+                date_end_give: dateEnd,
+                detail_table_give: JSON.stringify(detailTable)
             },
             success: function (response) {
-                alert(response['msg'])
-                window.location.reload()
+                if (response["result"] == "success") {
+                    alert(response["msg"]);
+                    window.location.reload();
+                } else {
+                    alert('로그인이 만료되었습니다. 다시 로그인해 주십시오.');
+                    window.location.reload();
+                }
             }
         })
-   // }
+    }
 }
 
 // 세부일정 폼 추가
@@ -94,10 +115,9 @@ const detailNotes = document.getElementById('form-detail-notes');
 const detailTableContents = document.getElementById('detail-table-contents')
 
 
-
 // 세부일정 등록 버튼 클릭 (제출)
 
-datailAddBtn.addEventListener('click',  addDetailForm)
+datailAddBtn.addEventListener('click', addDetailForm)
 
 
 // 전체일정 등록 버튼 클릭(제출)
@@ -134,24 +154,25 @@ function hideDetailForm() {
 function addDetailForm() {
     const card = createDetailRow();
     // 상세폼이 빈칸일시 alert & 박스 안없어지게 하기 notes는 제외
-    if (detailDate.value== '' || detailLocation.value== '' || detailAddress.value== '') {
-    alert("내용을 입력하세요.");
-    datailAddBtn.disable = true;
+    if (detailDate.value == '' || detailLocation.value == '' || detailAddress.value == '') {
+        alert("내용을 입력하세요.");
+        datailAddBtn.disable = true;
 
     } else {
-    detailTableRow.append(card);
-    hideDetailForm();
-    tableToArr();
-    detailDate.value = ""
-    detailAddress.value = ""
-    detailLocation.value = ""
-    detailNotes.value = ""
+        detailTableRow.append(card);
+        hideDetailForm();
+        tableToArr();
+        detailDate.value = ""
+        detailAddress.value = ""
+        detailLocation.value = ""
+        detailNotes.value = ""
     }
 }
 
 
 // 세부일정 td 생성
 let id = 0;
+
 function createDetailRow() {
     const tableRow = document.createElement('tr');
     tableRow.setAttribute('class', 'detail-tr');
@@ -176,7 +197,7 @@ function createDetailRow() {
 // table to array
 
 function tableToArr() {
-     let detailTableArr = [];
+    let detailTableArr = [];
 
     $('.detail-tr').each(function () {
         let rowDataArray = [];
